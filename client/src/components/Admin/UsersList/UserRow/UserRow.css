@@ -1,9 +1,5 @@
-
 .btn-icon{
     padding: 10px;
-}
-
-.btn-icon{
     width: 50%;
     transition: all ease-in-out 0.3s;
     border: none;
@@ -28,10 +24,4 @@
 
 .btn-red-color{
     background-color: rgb(192, 96, 96);
-
 }
-
-.bg-action-white{
-    /* background-color: white; */
-}
-
