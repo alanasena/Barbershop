@@ -34,7 +34,6 @@
 
 .appointment-inner-container{
     margin-bottom: 20px;
-    /* border: 1px solid black; */
 }
 
 .appointment-inner-container p{
@@ -78,19 +77,17 @@
 }
 
 .appointment-data{
-    /* border: 1px solid black; */
     margin: 15px 0px;
     background-color: rgb(69, 159, 233);
     color: white;
     width: 100%;
     padding: 10px;
     border-radius: 10px;
-
     transition: 0.5s all ease-in-out;
     opacity: 0;
     transform: translateY(30px);
-    
 }
+
 
 .appointment-data-show{
     opacity: 1;
@@ -100,16 +97,15 @@
 
 .appointment-data h3{
     margin-bottom: 10px;
-    color: black;
-
+    color: white;
 }
 
 .appointment-data p{
     margin-bottom: 6px;
     font-weight: bold;
-    color: black;
-
+    color: white;
 }
+
 
 .appointment-data span{
    
