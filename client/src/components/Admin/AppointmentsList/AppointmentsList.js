@@ -25,10 +25,11 @@ const AppointmentsList = () => {
                 console.log(error)
             }
             else{
-                let newAppointments = response.data.filter((obj)=>{
-                    if( obj.timeInMS > sundays.sunday && obj.timeInMS < sundays.nextSunday)return true
-                    else return false  
-                })
+                let newAppointments = response.data.filter(obj =>
+                    obj.timeInMS > sundays.sunday &&
+                    obj.timeInMS < sundays.nextSunday
+            );
+
                 console.log('newAppointments: ',newAppointments)
                 setAppointments(newAppointments)
             }
