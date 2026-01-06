@@ -1,12 +1,11 @@
 import React ,{useState, useEffect}from 'react'
 import './Register.css'
 import logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link,  useHistory} from 'react-router-dom'
 import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
-import { useHistory } from 'react-router-dom'
 
 
 
