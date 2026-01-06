@@ -4,12 +4,15 @@ import Navbar from '../Home/Navbar/Navbar'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
-import {getCookie, checkCookie} from '../../cookies'
+import { getCookie } from '../../cookies';
 import {fullTime} from '../../time'
 import axios from 'axios'
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
+import { useHistory } from 'react-router-dom';
+
 
 const Appointment = (props) => {
+    const history = useHistory();
     const [startDate, setStartDate] = useState(new Date())
     const [userTime, setUserTime] = useState('00:00')
     const [userDate, setUserDate] = useState('')
@@ -32,7 +35,6 @@ const Appointment = (props) => {
         { value:'15:00',  label:'15:00' },
         { value:'15:30',  label:'15:30' }];
 
-    const [updatedOptions, setUpdatedOptions] = useState(options)
 
     useEffect(() =>{
         let p = getCookie('phone')
@@ -42,7 +44,7 @@ const Appointment = (props) => {
         let changeAppointment = document.querySelector('#change-btn')
         let phoneInput = document.querySelector('#appo-phone')
 
-        if(getCookie('change') !== '' ){
+        if (getCookie('change')) {
             console.log('have cookie change')
             makeAppointment.style.display = 'none'
             changeAppointment.style.display = 'block'
@@ -56,10 +58,7 @@ const Appointment = (props) => {
         }
     },[])
 
-    if(phone.length >= 6 && userTime !== '' && userDate!== '')  {
-        let x = document.querySelector('.appointment-data')
-        x.classList.add('appointment-data-show')
-    }
+
 
     const changeAppointment = async() =>{
 
@@ -109,7 +108,7 @@ const Appointment = (props) => {
             },6000)
         }else{
             alert(response.data)
-            props.history.push({ pathname: '/profile' });
+            history.push('/profile');
         }
     }
  
@@ -143,9 +142,8 @@ const Appointment = (props) => {
                 <div className='appointment-form'>
                     <h1>Make Appointment</h1>
                     <div className='appointment-inner-container'>
-                        {error !== '' ?  <ErrorMsg info={error}/>
-                        
-                        : ''}
+                        {error && <ErrorMsg info={error} />}
+
                         <p>Please choose date:<span className='red-astrix'>*</span></p>
                         <DatePicker
                             selected={startDate}
@@ -159,19 +157,18 @@ const Appointment = (props) => {
                     <div className='appointment-inner-container'>
                         <p>Please choose time:<span className='red-astrix'>*</span></p>
                         <Select
-                            value={updatedOptions.filter((option) => {
-                                return option.value === userTime
-                              })}       
+                            value={options.find(option => option.value === userTime)}
                             onChange={handleTimeChange}
                             options={options}
-                            className='time-picker' 
+                            className='time-picker'
                         />
+
                     </div>
 
                     <div id='appo-phone' className='appointment-inner-container'>
                         <p>Lets be in touch: <span className='red-astrix'>*</span></p>
                         <input type="tel" className='phone-input' placeholder='phone...' 
-                        value={phone ? phone : 'phone...'}
+                        value={phone}
                         onChange={(e)=>setPhone(e.target.value)}/>
                     </div>
                     <div id='make-btn' className='appointment-inner-container'>
@@ -180,12 +177,15 @@ const Appointment = (props) => {
                     <div id='change-btn' className='appointment-inner-container'>
                         <button onClick={changeAppointment} className='appointment-btn'>Update</button>
                     </div>
-                    <div className='appointment-data'>
-                        <h3>Appointment will be set for:</h3>
-                        <p>Date:  <span>{userDate}</span></p>
-                        <p>Hour: <span>{userTime}</span></p>
-                        <p>Phone: <span>{phone}</span></p>
-                    </div>
+                    {phone.length >= 6 && userTime && userDate && (
+                        <div className='appointment-data appointment-data-show'>
+                            <h3>Appointment will be set for:</h3>
+                            <p>Date:  <span>{userDate}</span></p>
+                            <p>Hour: <span>{userTime}</span></p>
+                            <p>Phone: <span>{phone}</span></p>
+                        </div>
+                    )}
+
                 </div>
             </div> 
         </div>

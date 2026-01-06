@@ -50,8 +50,15 @@ const UserList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => <UserRow deleteUser={deleteUser} user={user}/>)}
-                </tbody>
+                    {users.map((user) => (
+                        <UserRow
+                        key={user._id}
+                        user={user}
+                        deleteUser={deleteUser}
+                        />
+                    ))}
+                    </tbody>
+
             </table>    
         </div>
     )
