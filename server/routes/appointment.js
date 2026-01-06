@@ -1,116 +1,205 @@
-const router = require('express').Router();
-const NewAppointment = require('../models/Appointment');
-const Users = require('../models/User');
+const router = require('express').Router()
+const NewAppointment = require('../models/Appointment')
+const Users = require('../models/User')
+const mongoose = require('mongoose')
 
+/**
+ * SANITIZE OBJECT ID
+ */
+const sanitizeString = (value) => {
+  if (typeof value === 'string') return value.toString()
+  if (value !== undefined && value !== null) return String(value)
+  return ''
+}
 
+const sanitizeObjectId = (id) => {
+  if (typeof id !== 'string') return null
+  if (!mongoose.Types.ObjectId.isValid(id)) return null
+  return new mongoose.Types.ObjectId(id)
+}
 
-router.post('/appointment', async (req, res)=>{
-    console.log('makeing appointment')
+/**
+ * CREATE APPOINTMENT
+ */
+router.post('/appointment', async (req, res) => {
+  try {
+    const { userID, key, name, date, time, phone, day, timeInMS } = req.body
 
-    const appointmentExists = await NewAppointment.find({userID:req.body.userID}) // return array of objects
-    if(appointmentExists[0]) return res.send({error:'You alreay have appointment'})
+    const safeUserId = sanitizeObjectId(userID)
+    if (!safeUserId) {
+      return res.status(400).send({ error: 'Invalid user ID' })
+    }
 
-    const timeExists = await NewAppointment.find({appointmentKey:req.body.key}) // return array of objects
-    if(timeExists[0]) return res.send({error:'Sorry try another time'})
+    const appointmentExists = await NewAppointment.findOne({ userID: { $eq: safeUserId } })
 
-    const user = await Users.findOne({_id:req.body.userID})
-    if(!user) return res.send({error:'user dosent exists'})
+    if (appointmentExists) {
+      return res.status(400).send({ error: 'You already have an appointment' })
+    }
+    const timeExists = await NewAppointment.findOne({ appointmentKey: { $eq: sanitizeString(key) } })
 
-    let {userID, key, name, date, time, phone, day, timeInMS} = req.body
+    if (timeExists) {
+      return res.status(400).send({ error: 'Sorry, try another time' })
+    }
+    const user = await Users.findOne({ _id: { $eq: safeUserId } })
 
-    const newAppointment = new NewAppointment({   
-        userID,
-        appointmentKey:key,
-        name,
-        date,
-        time,
-        phone,
-        day,
-        timeInMS
-      })
-      newAppointment.save()
+    if (!user) {
+      return res.status(404).send({ error: 'User does not exist' })
+    }
 
-      user.phone = phone
-      user.save()
+    const newAppointment = new NewAppointment({
+      userID: safeUserId,
+      appointmentKey: sanitizeString(key),
+      name: sanitizeString(name),
+      date: sanitizeString(date),
+      time: sanitizeString(time),
+      phone: sanitizeString(phone),
+      day: sanitizeString(day),
+      timeInMS
 
-    res.status(200).send('Appointment scheduled successfully!')
-})
+    })
 
-router.post('/changeappointment', async (req, res)=>{
-  console.log('changing appointment')
+    await newAppointment.save()
 
-  const appointmentExists = await NewAppointment.find({userID:req.body.userID}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
+    user.phone = sanitizeString(phone)
+    await user.save()
 
-  let {key, date, time, day, timeInMS} = req.body
-
-  appointmentExists[0].appointmentKey = key
-  appointmentExists[0].date = date
-  appointmentExists[0].time = time
-  appointmentExists[0].day = day
-  appointmentExists[0].timeInMS = timeInMS
-
-  appointmentExists[0].save()
-  res.status(200).send('appointment changed!')
-})
-
-
-router.get('/userappointment', async(req, res) =>{
-
-  const appointmentExists = await NewAppointment.find({userID:req.query.id}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
-
-  console.log('user appointment')
-
-  let obj = {}
-  obj.day = appointmentExists[0].day
-  obj.time = appointmentExists[0].time
-  obj.date = appointmentExists[0].date
-  
-  res.send(obj)
-
-})
-
-router.get('/getappointments', async(req, res) => {
-
-  console.log('get appointments')
-  const appointmentExists = await NewAppointment.find() // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'You have no appointments'})
-
-  res.send(appointmentExists)
-})
-
-
-router.post('/cancelappointment', async(req, res) =>{
-
-  console.log('cancel appointment', req.body)
-
-  const appointmentExists = await NewAppointment.find({userID:req.body.id}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
-
-  try{
-    let deleteRes = await NewAppointment.deleteOne({_id:appointmentExists[0]._id})
-    console.log('deleteRes: ',deleteRes)
-
-  }catch(e){
-    console.log(e)
+    res.status(201).send('Appointment scheduled successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
   }
-
-
-
-  res.send('canceling appointment...')
-
-
 })
 
-router.get('/getusers', async(req, res) => {
-  console.log('get users')
-  const usersExists = await Users.find()
-  if(!usersExists[0]) return res.send({error:'No Users'})
+/**
+ * CHANGE APPOINTMENT
+ */
+router.post('/changeappointment', async (req, res) => {
+  try {
+    const { userID, key, date, time, day, timeInMS } = req.body
 
-  res.send(usersExists)
+    const safeUserId = sanitizeObjectId(userID)
+    if (!safeUserId) {
+      return res.status(400).send({ error: 'Invalid user ID' })
+    }
 
+    const appointment = await NewAppointment.findOne({
+      userID: { $eq: safeUserId }
+    })
+
+    if (!appointment) {
+      return res.status(404).send({ error: 'Appointment not found' })
+    }
+    appointment.appointmentKey = sanitizeString(key)
+    appointment.date = sanitizeString(date)
+    appointment.time = sanitizeString(time)
+    appointment.day = sanitizeString(day)
+    appointment.timeInMS = sanitizeString(timeInMS)
+
+    await appointment.save()
+
+    res.status(200).send('Appointment changed successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
+  }
 })
 
+/**
+ * GET USER APPOINTMENT
+ */
+router.get('/userappointment', async (req, res) => {
+  try {
+    const { id } = req.query
 
-module.exports = router;
+    const safeUserId = sanitizeObjectId(id)
+    if (!safeUserId) {
+      return res.status(400).send({ error: 'Invalid user ID' })
+    }
+
+    const appointment = await NewAppointment.findOne({
+      userID: { $eq: safeUserId }
+    })
+
+    if (!appointment) {
+      return res.status(404).send({ error: 'Appointment not found' })
+    }
+
+    res.send({
+      day: appointment.day,
+      time: appointment.time,
+      date: appointment.date
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
+  }
+})
+
+/**
+ * GET ALL APPOINTMENTS
+ */
+router.get('/getappointments', async (req, res) => {
+  try {
+    const appointments = await NewAppointment.find({})
+
+    if (appointments.length === 0) {
+      return res.status(404).send({ error: 'No appointments found' })
+    }
+
+    res.send(appointments)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
+  }
+})
+
+/**
+ * CANCEL APPOINTMENT
+ */
+router.post('/cancelappointment', async (req, res) => {
+  try {
+    const { userID } = req.body
+
+    const safeUserId = sanitizeObjectId(userID)
+    if (!safeUserId) {
+      return res.status(400).send({ error: 'Invalid user ID' })
+    }
+
+    const appointment = await NewAppointment.findOne({
+      userID: { $eq: safeUserId }
+    })
+
+    if (!appointment) {
+      return res.status(404).send({ error: 'Appointment not found' })
+    }
+
+    await NewAppointment.deleteOne({
+      _id: { $eq: appointment._id }
+    })
+
+    res.status(200).send('Appointment canceled successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
+  }
+})
+
+/**
+ * GET USERS
+ */
+router.get('/getusers', async (req, res) => {
+  try {
+    const users = await Users.find({})
+
+    if (users.length === 0) {
+      return res.status(404).send({ error: 'No users found' })
+    }
+
+    res.send(users)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ error: 'Server error' })
+  }
+})
+
+module.exports = router

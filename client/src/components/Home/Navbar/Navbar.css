@@ -50,7 +50,7 @@
 
 .links:hover{
     transform:scale(1.1);
-    color: rgb(199, 181, 78);
+    color: rgb(170, 140, 40);
 }
 
 .date-and-phone{
@@ -70,7 +70,6 @@
 
 .nav-date{
     margin-left: 20px;
-    /* color: rgb(112, 195, 112); */
     color: rgb(207, 191, 117);
 
 }
@@ -102,15 +101,15 @@
 
 .user-loggedIn{
     padding: 5px;
-    color:white;
-    display: flex;
+    color: white;
     align-items: center;
     justify-content: center;
     margin-left: auto;
     font-size: 18px;
     margin-right: 30px;
-    display: none;
+    display: none; 
 }
+
 
 .user-loggedIn button{
     margin-left: 10px;
@@ -132,11 +131,11 @@
 .cp{
     margin-left: 10px;
     padding: 5px 10px;
-    background-color: rgb(31, 174, 199);
+    background-color: rgb(0, 123, 150);
+    color: white;
     border-radius: 5px;
     border: none;
     height: 30px;
-    color: white;
     transition: all ease-in-out 0.3s;
     cursor: pointer;
     display: none; 
@@ -149,7 +148,7 @@
 .up{
     margin-left: 10px;
     padding: 5px 10px;
-    background-color: rgb(31, 174, 199);
+    background-color: rgb(0, 123, 150);
     border-radius: 5px;
     border: none;
     height: 30px;

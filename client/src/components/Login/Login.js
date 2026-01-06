@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {setCookie} from '../../cookies'
 import './Login.css'
 import logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
@@ -10,6 +10,7 @@ import Navbar from '../Home/Navbar/Navbar'
 
 
 const Login = (props) => {
+    const history = useHistory()        
     const [email, setEmail] = useState('eli@gmail.com')
     const [pass, setPass] = useState('123')
     const [error, setError] = useState('')
@@ -46,11 +47,11 @@ const Login = (props) => {
             setCookie('admin', admin ,2)
             setCookie('phone', phone ,2)
 
-            if(admin)
-                props.history.push({ pathname: '/admin' });
+            if (admin)
+                history.push('/admin')
             else
-                props.history.push({ pathname: '/appointment' });
-            console.log('login succeed')
+                history.push('/appointment')
+
         }
     }
 

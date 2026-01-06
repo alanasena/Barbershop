@@ -38,6 +38,7 @@
     width: 210px;
     border: 2px solid white;
     color: white;
+    background-color: rgba(0, 0, 0, 0.55); /* ✅ contraste garantido */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,6 +47,7 @@
     padding: 18px;
     transition: all ease-in-out 0.3s;
     font-size: 17px;
+    border-radius: 10px;
 }
 
 .hours-box:hover{

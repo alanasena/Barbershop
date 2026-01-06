@@ -1,7 +1,7 @@
 import React ,{useState, useEffect}from 'react'
 import './Register.css'
 import logo from '../../assets/logo.png'
-import { Link } from 'react-router-dom'
+import { Link,  useHistory} from 'react-router-dom'
 import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
@@ -9,7 +9,9 @@ import Navbar from '../Home/Navbar/Navbar'
 
 
 
+
 const Register = (props) => {
+    const history = useHistory()
     const [email, setEmail] = useState('eli@test.com')
     const [pass, setPass] = useState('123')
     const [confirmPass, setConfirmPass] = useState('123')
@@ -40,7 +42,7 @@ const Register = (props) => {
             },6000)
         }
         else{
-            props.history.push({ pathname: '/login' });
+            history.push('/login')
             console.log('register succed')
         }   
     }

@@ -3,8 +3,6 @@ import beardShave from '../../../assets/beard_shave.jpg'
 import hair_cut from '../../../assets/hair_cut.jpg'
 import pic3 from '../../../assets/pic3.jpg'
 import logo from '../../../assets/logo.png'
-// import ScrollAnimation from 'react-animate-on-scroll';
-// import "animate.css/animate.min.css";
 
 
 
