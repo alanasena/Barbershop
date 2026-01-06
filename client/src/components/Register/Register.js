@@ -6,10 +6,13 @@ import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
+import { useHistory } from 'react-router-dom'
+
 
 
 
 const Register = (props) => {
+    const history = useHistory()
     const [email, setEmail] = useState('eli@test.com')
     const [pass, setPass] = useState('123')
     const [confirmPass, setConfirmPass] = useState('123')
@@ -40,7 +43,7 @@ const Register = (props) => {
             },6000)
         }
         else{
-            props.history.push({ pathname: '/login' });
+            history.push('/login')
             console.log('register succed')
         }   
     }

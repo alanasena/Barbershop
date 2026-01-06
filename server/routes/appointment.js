@@ -39,7 +39,9 @@ router.post('/appointment', async (req, res)=>{
 router.post('/changeappointment', async (req, res)=>{
   console.log('changing appointment')
 
-  const appointmentExists = await NewAppointment.find({userID:req.body.userID}) // return array of objects
+  const { userID } = req.body;
+  NewAppointment.find({ userID });
+
   if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
 
   let {key, date, time, day, timeInMS} = req.body

@@ -1,5 +1,7 @@
 import React from 'react'
 import './ErrorMsg.css'
+import PropTypes from 'prop-types';
+
 
 const ErrorMsg = ({info}) => {
 
@@ -10,5 +12,10 @@ const ErrorMsg = ({info}) => {
         </div>
     )
 }
+
+ErrorMsg.propTypes = {
+    info: PropTypes.string.isRequired,
+};
+
 
 export default ErrorMsg

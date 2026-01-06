@@ -71,9 +71,9 @@ const Navbar = () => {
         <div>
             <SideNav/>
             <div className='navbar'>
-                <h1 onClick={()=>window.location.replace('/')} className='navbar-logo'>
+                <Link to="/" className="navbar-logo">
                     Barber Shop
-                </h1>
+                </Link>
                 <ul className='navbar-ul'>
                     <li className='nav-items'>
                         <a href="./#hero-navigate" className='links'>Home</a>
@@ -99,11 +99,12 @@ const Navbar = () => {
                 <div className='date-and-phone'>
                     <div>
                         <i className="fa fa-phone" aria-hidden="true"></i>
-                        <label> (+972) 54-225-6896 </label>
+                        <span>(+972) 54-225-6896</span>
                     </div>
                     <div className='nav-date'>
                         <i className="fa fa-calendar" aria-hidden="true"></i>
-                        <label> {day} - {workTime} </label>
+                        <span>{day} - {workTime}</span>
+
                     </div>
                 </div>
 
@@ -124,11 +125,11 @@ const Navbar = () => {
                 </div>
 
             
-                <div onClick={toggleSideNav} className="humburger">
+                <button onClick={toggleSideNav} className="humburger" aria-label="Open menu">
                     <div className="line"></div>
                     <div className="line"></div>
                     <div className="line"></div>
-                </div>
+                </button>
             </div>
         </div>
 
