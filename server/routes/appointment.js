@@ -6,6 +6,12 @@ const mongoose = require('mongoose')
 /**
  * SANITIZE OBJECT ID
  */
+const sanitizeString = (value) => {
+  if (typeof value === 'string') return value.toString()
+  if (value !== undefined && value !== null) return String(value)
+  return ''
+}
+
 const sanitizeObjectId = (id) => {
   if (typeof id !== 'string') return null
   if (!mongoose.Types.ObjectId.isValid(id)) return null
@@ -23,41 +29,38 @@ router.post('/appointment', async (req, res) => {
     if (!safeUserId) {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
-    let query = { userID: { $eq: safeUserId } };
 
-    const appointmentExists = await NewAppointment.findOne(query)
+    const appointmentExists = await NewAppointment.findOne({ userID: { $eq: safeUserId } })
 
     if (appointmentExists) {
       return res.status(400).send({ error: 'You already have an appointment' })
     }
-    query = { appointmentKey: { $eq: key.toString() } };
-
-    const timeExists = await NewAppointment.findOne(query)
+    const timeExists = await NewAppointment.findOne({ appointmentKey: { $eq: sanitizeString(key) } })
 
     if (timeExists) {
       return res.status(400).send({ error: 'Sorry, try another time' })
     }
-    query = { _id: { $eq: safeUserId } };
+    const user = await Users.findOne({ _id: { $eq: safeUserId } })
 
-    const user = await Users.findOne(query)
     if (!user) {
       return res.status(404).send({ error: 'User does not exist' })
     }
 
     const newAppointment = new NewAppointment({
       userID: safeUserId,
-      appointmentKey: key,
-      name,
-      date,
-      time,
-      phone,
-      day,
+      appointmentKey: sanitizeString(key),
+      name: sanitizeString(name),
+      date: sanitizeString(date),
+      time: sanitizeString(time),
+      phone: sanitizeString(phone),
+      day: sanitizeString(day),
       timeInMS
+
     })
 
     await newAppointment.save()
 
-    user.phone = phone
+    user.phone = sanitizeString(phone)
     await user.save()
 
     res.status(201).send('Appointment scheduled successfully')
@@ -86,12 +89,11 @@ router.post('/changeappointment', async (req, res) => {
     if (!appointment) {
       return res.status(404).send({ error: 'Appointment not found' })
     }
-
-    appointment.appointmentKey = key
-    appointment.date = date
-    appointment.time = time
-    appointment.day = day
-    appointment.timeInMS = timeInMS
+    appointment.appointmentKey = sanitizeString(key)
+    appointment.date = sanitizeString(date)
+    appointment.time = sanitizeString(time)
+    appointment.day = sanitizeString(day)
+    appointment.timeInMS = sanitizeString(timeInMS)
 
     await appointment.save()
 
