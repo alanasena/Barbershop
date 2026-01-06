@@ -23,24 +23,23 @@ router.post('/appointment', async (req, res) => {
     if (!safeUserId) {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
+    let query = { userID: { $eq: safeUserId } };
 
-    const appointmentExists = await NewAppointment.findOne({
-      userID: { $eq: safeUserId }
-    })
+    const appointmentExists = await NewAppointment.findOne(query)
 
     if (appointmentExists) {
       return res.status(400).send({ error: 'You already have an appointment' })
     }
+    query = { appointmentKey: { $eq: key.toString() } };
 
-    const timeExists = await NewAppointment.findOne({
-      appointmentKey: { $eq: key }
-    })
+    const timeExists = await NewAppointment.findOne(query)
 
     if (timeExists) {
       return res.status(400).send({ error: 'Sorry, try another time' })
     }
+    query = { _id: { $eq: safeUserId } };
 
-    const user = await Users.findOne({ _id: { $eq: safeUserId } })
+    const user = await Users.findOne(query)
     if (!user) {
       return res.status(404).send({ error: 'User does not exist' })
     }
