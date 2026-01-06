@@ -34,13 +34,11 @@ table tr{
 .appointments-list tr:hover {background-color: #ddd;}
 
 .appointments-list h1,h3{
-    /* margin: 20px; */
     text-align: center;
 }
 
 .admin-profile-links-container{
     text-align: center;
-    /* border: 1px solid black; */
 }
 
 .admin-profile-link{

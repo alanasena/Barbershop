@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 import {Route, Redirect} from 'react-router-dom'
 import {getCookie} from './cookies'
 
@@ -13,13 +14,15 @@ export const AdminRoute = ({component: Components, ...rest}) => {
               return <Components {...props} />;
             } else {
                 console.log('not admin')
-              return (
-                <Redirect from={`${props.location}`} to='/appointment'/>
-              );
+              return <Redirect to="/appointment" />;
+
             }
         }}
       />
     )
 }
+AdminRoute.propTypes = {
+  component: PropTypes.elementType.isRequired,
+};
 
 
