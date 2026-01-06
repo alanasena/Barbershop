@@ -3,6 +3,9 @@ const NewAppointment = require('../models/Appointment')
 const Users = require('../models/User')
 const mongoose = require('mongoose')
 
+/**
+ * CREATE APPOINTMENT
+ */
 router.post('/appointment', async (req, res) => {
   try {
     const { userID, key, name, date, time, phone, day, timeInMS } = req.body
@@ -11,7 +14,9 @@ router.post('/appointment', async (req, res) => {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
 
-    const appointmentExists = await NewAppointment.findOne({ userID })
+    const safeUserId = new mongoose.Types.ObjectId(userID)
+
+    const appointmentExists = await NewAppointment.findOne({ userID: safeUserId })
     if (appointmentExists) {
       return res.status(400).send({ error: 'You already have an appointment' })
     }
@@ -21,13 +26,13 @@ router.post('/appointment', async (req, res) => {
       return res.status(400).send({ error: 'Sorry, try another time' })
     }
 
-    const user = await Users.findById(userID)
+    const user = await Users.findById(safeUserId)
     if (!user) {
       return res.status(404).send({ error: 'User does not exist' })
     }
 
     const newAppointment = new NewAppointment({
-      userID,
+      userID: safeUserId,
       appointmentKey: key,
       name,
       date,
@@ -49,7 +54,9 @@ router.post('/appointment', async (req, res) => {
   }
 })
 
-
+/**
+ * CHANGE APPOINTMENT
+ */
 router.post('/changeappointment', async (req, res) => {
   try {
     const { userID, key, date, time, day, timeInMS } = req.body
@@ -58,7 +65,9 @@ router.post('/changeappointment', async (req, res) => {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
 
-    const appointment = await NewAppointment.findOne({ userID })
+    const safeUserId = new mongoose.Types.ObjectId(userID)
+
+    const appointment = await NewAppointment.findOne({ userID: safeUserId })
     if (!appointment) {
       return res.status(404).send({ error: 'Appointment not found' })
     }
@@ -78,7 +87,9 @@ router.post('/changeappointment', async (req, res) => {
   }
 })
 
-
+/**
+ * GET USER APPOINTMENT
+ */
 router.get('/userappointment', async (req, res) => {
   try {
     const { id } = req.query
@@ -87,7 +98,9 @@ router.get('/userappointment', async (req, res) => {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
 
-    const appointment = await NewAppointment.findOne({ userID: id })
+    const safeUserId = new mongoose.Types.ObjectId(id)
+
+    const appointment = await NewAppointment.findOne({ userID: safeUserId })
     if (!appointment) {
       return res.status(404).send({ error: 'Appointment not found' })
     }
@@ -103,7 +116,9 @@ router.get('/userappointment', async (req, res) => {
   }
 })
 
-
+/**
+ * GET ALL APPOINTMENTS
+ */
 router.get('/getappointments', async (req, res) => {
   try {
     const appointments = await NewAppointment.find()
@@ -119,7 +134,9 @@ router.get('/getappointments', async (req, res) => {
   }
 })
 
-
+/**
+ * CANCEL APPOINTMENT
+ */
 router.post('/cancelappointment', async (req, res) => {
   try {
     const { userID } = req.body
@@ -128,7 +145,9 @@ router.post('/cancelappointment', async (req, res) => {
       return res.status(400).send({ error: 'Invalid user ID' })
     }
 
-    const appointment = await NewAppointment.findOne({ userID })
+    const safeUserId = new mongoose.Types.ObjectId(userID)
+
+    const appointment = await NewAppointment.findOne({ userID: safeUserId })
     if (!appointment) {
       return res.status(404).send({ error: 'Appointment not found' })
     }
@@ -142,7 +161,9 @@ router.post('/cancelappointment', async (req, res) => {
   }
 })
 
-
+/**
+ * GET USERS
+ */
 router.get('/getusers', async (req, res) => {
   try {
     const users = await Users.find()
