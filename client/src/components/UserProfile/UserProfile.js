@@ -3,7 +3,7 @@ import './UserProfile.css'
 import Navbar from '../Home/Navbar/Navbar'
 import profileImg  from '../../assets/profile-img.jpg'
 import {Link} from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../../utils/axiosConfig'
 import {getCookie, setCookie, setCookieInMins, deleteCookie} from '../../cookies'
 
 
@@ -17,9 +17,11 @@ const UserProfile = (props) => {
     const [updatedEmail, setUpdatedEmail] = useState('')
     const [updatedPhone, setUpdatedPhone] = useState('')
 
-    const [time, setTime] = useState('Empty')
+    const [time, setTime] = useState('Vazio')
     const [date, setDate] = useState('')
     const [day, setDay] = useState('')
+    const [appointment, setAppointment] = useState(null)
+    const [canRate, setCanRate] = useState(false)
 
 
 
@@ -30,73 +32,89 @@ const UserProfile = (props) => {
 
 
 
-    const getProfile = (userID) =>{
-        axios.get(`https://barber-appointments.herokuapp.com/profiledata?id=${userID}`).then((response) =>{
-
-            let {error, email, name, phone } = response.data 
+    const getProfile = async (userID) =>{
+        try {
+            const profileResponse = await axiosInstance.get('/profiledata')
+            let {error, email, name, phone } = profileResponse.data 
             if(error){
                 console.log(error)
             }
             else{
                 setName(name)
                 setEmail(email)
-                setPhone(phone)
-                setCookie('phone', phone ,2)
-                console.log(response.data)
+                setPhone(phone || '')
+                setCookie('phone', phone || '' ,2)
+                console.log(profileResponse.data)
             }
-        })
 
-        axios.get(`https://barber-appointments.herokuapp.com/userappointment?id=${userID}`).then((response) =>{
-            console.log(response.data)
+            const appointmentResponse = await axiosInstance.get('/userappointment')
+            console.log(appointmentResponse.data)
 
-            let {error, day, time, date } = response.data 
-            if(error){
-                console.log(error)
+            let {error: appError, day, time, date, _id, barberId, isRated, timeInMS } = appointmentResponse.data 
+            if(appError){
+                console.log(appError)
             }
             else{
                 setTime(time)
                 setDate(date)
                 setDay(day)
+                setAppointment({ _id, barberId, isRated, timeInMS })
+                
+                // Verificar se pode avaliar (agendamento já passou e não foi avaliado)
+                if (timeInMS && barberId && !isRated) {
+                    const appointmentDate = new Date(timeInMS)
+                    const now = new Date()
+                    if (appointmentDate <= now) {
+                        setCanRate(true)
+                    }
+                }
             }
-        })
+        } catch (err) {
+            console.error('Erro ao buscar dados do perfil:', err)
+        }
     }
 
-    const updateProfile = () =>{
+    const updateProfile = async () =>{
 
         if(updatedName === '' && updatedEmail ==='' && updatedPhone ===''){ 
-            alert('all fields are empty')
+            alert('Todos os campos estão vazios')
         }
         else{
 
             let obj = {}
-            obj.name = updatedName
-            obj.email = updatedEmail
-            obj.phone = updatedPhone
-            obj.userID = getCookie('id')
+            if(updatedName) obj.name = updatedName
+            if(updatedEmail) obj.email = updatedEmail
+            if(updatedPhone) obj.phone = updatedPhone
     
-            axios.post('https://barber-appointments.herokuapp.com/updateprofile', obj).then((response) =>{
-                let {error} = response.data
+            try {
+                const response = await axiosInstance.post('/updateprofile', obj)
+                let {error, message} = response.data
 
                 if(error){
-                    alert('update profile: '+error)
+                    alert('Erro ao atualizar perfil: '+error)
                 }
                 else{
-                    
-                    if(email !=='')
-                        setEmail(email)
-                    if(phone !==''){
-                        setPhone(phone)
-                        setCookie('phone', phone ,2)
+                    if(updatedEmail){
+                        setEmail(updatedEmail)
                     }
-                    if(name !==''){
-                        setCookie('name', name ,2)
-                        setName(name)
+                    if(updatedPhone){
+                        setPhone(updatedPhone)
+                        setCookie('phone', updatedPhone ,2)
                     }
-                    alert('data successfully updated!')
-                    window.location.reload(false);
+                    if(updatedName){
+                        setCookie('name', updatedName ,2)
+                        setName(updatedName)
+                    }
+                    alert(message || 'Dados atualizados com sucesso!')
+                    setUpdatedName('')
+                    setUpdatedEmail('')
+                    setUpdatedPhone('')
                     console.log('server res: ', response.data)
                 }
-            })
+            } catch (err) {
+                const errorMsg = err.response?.data?.error || 'Erro ao atualizar perfil'
+                alert('Erro ao atualizar perfil: ' + errorMsg)
+            }
         }
     }
 
@@ -104,8 +122,8 @@ const UserProfile = (props) => {
     const changeAppointment = () =>{
         console.log('change appointment')
 
-        if(time === 'Empty'){
-            alert('You not have appointment')
+        if(time === 'Vazio'){
+            alert('Você não tem agendamento')
         }else{
             setCookieInMins('change', true, 1)
             props.history.push({ pathname: '/appointment' });
@@ -113,35 +131,50 @@ const UserProfile = (props) => {
     }
 
     const cancelAppointment = async() => {
-
-        let response = await axios.post('https://barber-appointments.herokuapp.com/cancelappointment', {id:getCookie('id')})
-        console.log(response.data)
-        let {error} = response.data
-        if(error){
-            alert(error)
-        }
-        else{
-            alert('Appointment deleted')
-            window.location.replace('/profile')
+        try {
+            let response = await axiosInstance.post('/cancelappointment')
+            console.log(response.data)
+            let {error, message} = response.data
+            if(error){
+                alert(error)
+            }
+            else{
+                alert(message || 'Agendamento cancelado com sucesso')
+                setTime('Vazio')
+                setDate('')
+                setDay('')
+            }
+        } catch (err) {
+            const errorMsg = err.response?.data?.error || 'Erro ao cancelar agendamento'
+            alert(errorMsg)
         }
     }
 
     const deleteAcc = async() =>{
-        console.log('id cookie ',getCookie('id'))
-        let response = await axios.post('https://barber-appointments.herokuapp.com/deleteacc', {id:getCookie('id')})
-        let {error} = response.data
-        if(error){
-            alert(error)
+        if(!window.confirm('Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.')) {
+            return
         }
-        else{
+        
+        try {
+            let response = await axiosInstance.post('/deleteacc')
+            let {error, message} = response.data
+            if(error){
+                alert(error)
+            }
+            else{
+                deleteCookie('id')
+                deleteCookie('admin')
+                deleteCookie('status')
+                deleteCookie('name')
+                deleteCookie('token')
+                deleteCookie('phone')
 
-            deleteCookie('id')
-            deleteCookie('admin')
-            deleteCookie('status')
-            deleteCookie('name')
-
-            alert(response.data)
-            window.location.replace('/')
+                alert(message || 'Conta deletada com sucesso')
+                window.location.replace('/')
+            }
+        } catch (err) {
+            const errorMsg = err.response?.data?.error || 'Erro ao deletar conta'
+            alert(errorMsg)
         }
     }
 
@@ -150,28 +183,28 @@ const UserProfile = (props) => {
             <Navbar/>
             <div className='user-profile-container'>
                 <div className='user-profile-left'>
-                    <h2>Welcome</h2>
+                    <h2>Bem-vindo</h2>
                     <img className='profile-img' src={profileImg} alt=""/>
-                    <h2>Good Day</h2>
+                    <h2>Bom Dia</h2>
 
                     <ul>
                         <li className='profile-make-appointment'>
                             <i className="fa fa-plus" aria-hidden="true"></i>
                             <Link className='link-make-appo' to='/appointment'>
-                                MAKE APPOINTMENT
+                                FAZER AGENDAMENTO
                             </Link>
                         </li>
                         <li>
                             <i className="fa fa-user" aria-hidden="true"></i>
-                            <a href='#user-profile-info'>PERSONAL INFO</a>
+                            <a href='#user-profile-info'>INFORMAÇÕES PESSOAIS</a>
                         </li>
                         <li>
                             <i className="fa fa-pencil mr-right-i" aria-hidden="true"></i>
-                            <a href='#user-profile-updateinfo'>UPDATE INFO</a>
+                            <a href='#user-profile-updateinfo'>ATUALIZAR INFO</a>
                         </li>
                         <li>
                             <i className="fa fa-trash" aria-hidden="true"></i>
-                            <a href='#user-profile-delete-acc'>DELETE ACCOUNT</a>
+                            <a href='#user-profile-delete-acc'>EXCLUIR CONTA</a>
                         </li>
                     </ul>
 
@@ -181,30 +214,39 @@ const UserProfile = (props) => {
            
                     <div id='user-profile-info' className='user-profile-box'>
                         <div>
-                            <h1>Profile Info</h1>
+                            <h1>Informações do Perfil</h1>
                             <div className='profile-underline'></div>
                         </div>
                         
                         <div className='user-profile-info-div'>
                             <div>
-                                <p>Name:</p>
+                                <p>Nome:</p>
                                 <span>{name}</span>
                             </div>
                             <div>
-                                <p>Email:</p>
+                                <p>E-mail:</p>
                                 <span>{email}</span>
                             </div>
                             <div>
-                                <p>Phone:</p>
+                                <p>Telefone:</p>
                                 <span>{phone}</span>
                             </div>
                         </div>
                         <div className='user-profile-appointment'>
                             <div className='user-profile-appointment-flex'>
                                 <div className='user-profile-appointment-btns'>
-                                    <p>You have appointment to:</p>
-                                    <button onClick={changeAppointment} id='profile-btn-change'>Change</button>
-                                    <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancel</button>
+                                    <p>Você tem agendamento para:</p>
+                                    <div>
+                                        <button onClick={changeAppointment} id='profile-btn-change'>Alterar</button>
+                                        <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancelar</button>
+                                    </div>
+                                    {canRate && appointment && appointment.barberId && (
+                                        <div style={{marginTop: '15px'}}>
+                                            <Link to='/rating' className='rate-barber-btn'>
+                                                ⭐ Avaliar Barbeiro
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className='user-profile-appointment-time'>
                                     <p>{day}</p>
@@ -219,40 +261,39 @@ const UserProfile = (props) => {
                     <div id='user-profile-updateinfo' className='user-profile-box'>
 
                         <div className='profile-mr-bottom'>
-                            <h1>Update Info</h1>
+                            <h1>Atualizar Informações</h1>
                             <div className='profile-underline'></div>
                         </div>
                         
 
-                        <p>Name:</p>
-                        <input type="text" placeholder='name...'
+                        <p>Nome:</p>
+                        <input type="text" placeholder='nome...'
                         onChange={(e) => setUpdatedName(e.target.value)}
                         />
-                        <p>Email:</p>
-                        <input type="text" placeholder='email...'
+                        <p>E-mail:</p>
+                        <input type="text" placeholder='e-mail...'
                         onChange={(e) => setUpdatedEmail(e.target.value)}
 
                         />
-                        <p>Phone:</p>
-                        <input type="text" placeholder='phone...'
+                        <p>Telefone:</p>
+                        <input type="text" placeholder='telefone...'
                         onChange={(e) => setUpdatedPhone(e.target.value)}
                         />
                         <br/>
-                        <button onClick={updateProfile} className='profile-update-btn'>update</button>
+                        <button onClick={updateProfile} className='profile-update-btn'>Atualizar</button>
 
                     </div>
 
                     <div id='user-profile-delete-acc' className='user-profile-box'>
                         <div className='profile-mr-bottom'>
-                            <h1>Delete Account</h1>
+                            <h1>Excluir Conta</h1>
                             <div className='profile-underline'></div>
                         </div>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            Est aliquid voluptates quos sit ea omnis maxime
-                            perspiciatis vitae, provident
+                            Ao excluir sua conta, todos os seus dados e agendamentos serão permanentemente removidos.
+                            Esta ação não pode ser desfeita. Tem certeza que deseja continuar?
                         </p>
-                        <button onClick={deleteAcc}  id='profile-delete-btn'>Delete</button>
+                        <button onClick={deleteAcc}  id='profile-delete-btn'>Excluir</button>
 
                     </div>
                 </div>

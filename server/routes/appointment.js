@@ -1,116 +1,160 @@
 const router = require('express').Router();
 const NewAppointment = require('../models/Appointment');
 const Users = require('../models/User');
+const { auth, adminAuth } = require('../middleware/auth');
 
+router.post('/appointment', auth, async (req, res) => {
+    try {
+        const userID = req.user.id;
+        
+        // Verificar se já tem agendamento
+        const appointmentExists = await NewAppointment.findOne({ userID });
+        if (appointmentExists) {
+            return res.status(400).json({error: 'Você já possui um agendamento'});
+        }
 
+        // Verificar se o horário já está ocupado
+        const timeExists = await NewAppointment.findOne({ appointmentKey: req.body.key });
+        if (timeExists) {
+            return res.status(400).json({error: 'Horário já ocupado, tente outro horário'});
+        }
 
-router.post('/appointment', async (req, res)=>{
-    console.log('makeing appointment')
+        // Verificar se usuário existe
+        const user = await Users.findById(userID);
+        if (!user) {
+            return res.status(404).json({error: 'Usuário não encontrado'});
+        }
 
-    const appointmentExists = await NewAppointment.find({userID:req.body.userID}) // return array of objects
-    if(appointmentExists[0]) return res.send({error:'You alreay have appointment'})
+        let {key, name, date, time, phone, day, timeInMS, barberId} = req.body;
 
-    const timeExists = await NewAppointment.find({appointmentKey:req.body.key}) // return array of objects
-    if(timeExists[0]) return res.send({error:'Sorry try another time'})
+        const newAppointment = new NewAppointment({   
+            userID,
+            appointmentKey: key,
+            name: name || user.name,
+            date,
+            time,
+            phone,
+            day,
+            timeInMS,
+            barberId: barberId || null
+        });
 
-    const user = await Users.findOne({_id:req.body.userID})
-    if(!user) return res.send({error:'user dosent exists'})
+        await newAppointment.save();
 
-    let {userID, key, name, date, time, phone, day, timeInMS} = req.body
+        // Atualizar telefone do usuário se fornecido
+        if (phone) {
+            user.phone = phone;
+            await user.save();
+        }
 
-    const newAppointment = new NewAppointment({   
-        userID,
-        appointmentKey:key,
-        name,
-        date,
-        time,
-        phone,
-        day,
-        timeInMS
-      })
-      newAppointment.save()
+        res.status(200).json({ message: 'Agendamento realizado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao criar agendamento:', error);
+        res.status(500).json({error: 'Erro ao criar agendamento'});
+    }
+});
 
-      user.phone = phone
-      user.save()
+router.post('/changeappointment', auth, async (req, res) => {
+    try {
+        const userID = req.user.id;
 
-    res.status(200).send('Appointment scheduled successfully!')
-})
+        const appointment = await NewAppointment.findOne({ userID });
+        if (!appointment) {
+            return res.status(404).json({error: 'Agendamento não encontrado'});
+        }
 
-router.post('/changeappointment', async (req, res)=>{
-  console.log('changing appointment')
+        // Verificar se o novo horário já está ocupado
+        if (req.body.key && req.body.key !== appointment.appointmentKey) {
+            const timeExists = await NewAppointment.findOne({ appointmentKey: req.body.key });
+            if (timeExists) {
+                return res.status(400).json({error: 'Horário já ocupado, tente outro horário'});
+            }
+        }
 
-  const appointmentExists = await NewAppointment.find({userID:req.body.userID}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
+        let {key, date, time, day, timeInMS} = req.body;
 
-  let {key, date, time, day, timeInMS} = req.body
+        if (key) appointment.appointmentKey = key;
+        if (date) appointment.date = date;
+        if (time) appointment.time = time;
+        if (day) appointment.day = day;
+        if (timeInMS) appointment.timeInMS = timeInMS;
 
-  appointmentExists[0].appointmentKey = key
-  appointmentExists[0].date = date
-  appointmentExists[0].time = time
-  appointmentExists[0].day = day
-  appointmentExists[0].timeInMS = timeInMS
+        await appointment.save();
+        res.status(200).json({ message: 'Agendamento alterado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao alterar agendamento:', error);
+        res.status(500).json({error: 'Erro ao alterar agendamento'});
+    }
+});
 
-  appointmentExists[0].save()
-  res.status(200).send('appointment changed!')
-})
+router.get('/userappointment', auth, async(req, res) => {
+    try {
+        const userID = req.user.id;
 
+        const appointment = await NewAppointment.findOne({ userID });
+        if (!appointment) {
+            return res.status(404).json({error: 'Agendamento não encontrado'});
+        }
 
-router.get('/userappointment', async(req, res) =>{
+        res.json({
+            _id: appointment._id,
+            day: appointment.day,
+            time: appointment.time,
+            date: appointment.date,
+            barberId: appointment.barberId || null,
+            isRated: appointment.isRated || false,
+            isCompleted: appointment.isCompleted || false,
+            timeInMS: appointment.timeInMS
+        });
+    } catch (error) {
+        console.error('Erro ao buscar agendamento:', error);
+        res.status(500).json({error: 'Erro ao buscar agendamento'});
+    }
+});
 
-  const appointmentExists = await NewAppointment.find({userID:req.query.id}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
+router.get('/getappointments', adminAuth, async(req, res) => {
+    try {
+        const appointments = await NewAppointment.find();
+        
+        if (appointments.length === 0) {
+            return res.status(404).json({error: 'Nenhum agendamento encontrado'});
+        }
 
-  console.log('user appointment')
+        res.json(appointments);
+    } catch (error) {
+        console.error('Erro ao buscar agendamentos:', error);
+        res.status(500).json({error: 'Erro ao buscar agendamentos'});
+    }
+});
 
-  let obj = {}
-  obj.day = appointmentExists[0].day
-  obj.time = appointmentExists[0].time
-  obj.date = appointmentExists[0].date
-  
-  res.send(obj)
+router.post('/cancelappointment', auth, async(req, res) => {
+    try {
+        const userID = req.user.id;
 
-})
+        const appointment = await NewAppointment.findOne({ userID });
+        if (!appointment) {
+            return res.status(404).json({error: 'Agendamento não encontrado'});
+        }
 
-router.get('/getappointments', async(req, res) => {
+        await NewAppointment.deleteOne({ _id: appointment._id });
+        res.json({ message: 'Agendamento cancelado com sucesso' });
+    } catch (error) {
+        console.error('Erro ao cancelar agendamento:', error);
+        res.status(500).json({error: 'Erro ao cancelar agendamento'});
+    }
+});
 
-  console.log('get appointments')
-  const appointmentExists = await NewAppointment.find() // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'You have no appointments'})
-
-  res.send(appointmentExists)
-})
-
-
-router.post('/cancelappointment', async(req, res) =>{
-
-  console.log('cancel appointment', req.body)
-
-  const appointmentExists = await NewAppointment.find({userID:req.body.id}) // return array of objects
-  if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
-
-  try{
-    let deleteRes = await NewAppointment.deleteOne({_id:appointmentExists[0]._id})
-    console.log('deleteRes: ',deleteRes)
-
-  }catch(e){
-    console.log(e)
-  }
-
-
-
-  res.send('canceling appointment...')
-
-
-})
-
-router.get('/getusers', async(req, res) => {
-  console.log('get users')
-  const usersExists = await Users.find()
-  if(!usersExists[0]) return res.send({error:'No Users'})
-
-  res.send(usersExists)
-
-})
-
+router.get('/getusers', adminAuth, async(req, res) => {
+    try {
+        const users = await Users.find().select('-password'); // Não retornar senhas
+        if (users.length === 0) {
+            return res.status(404).json({error: 'Nenhum usuário encontrado'});
+        }
+        res.json(users);
+    } catch (error) {
+        console.error('Erro ao buscar usuários:', error);
+        res.status(500).json({error: 'Erro ao buscar usuários'});
+    }
+});
 
 module.exports = router;

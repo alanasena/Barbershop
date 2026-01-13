@@ -6,13 +6,12 @@ import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
-
-
+import API_URL from '../../config/api'
 
 const Register = (props) => {
-    const [email, setEmail] = useState('eli@test.com')
-    const [pass, setPass] = useState('123')
-    const [confirmPass, setConfirmPass] = useState('123')
+    const [email, setEmail] = useState('')
+    const [pass, setPass] = useState('')
+    const [confirmPass, setConfirmPass] = useState('')
     const [error, setError] = useState('')
 
     useEffect( ()=>{
@@ -28,21 +27,30 @@ const Register = (props) => {
         userData.pass = pass
         userData.confirmPass = confirmPass
        
-        
-        let response =  await axios.post('https://barber-appointments.herokuapp.com/register', userData)
-        let {error} = response.data
-        if(error){
+        try {
+            let response = await axios.post(`${API_URL}/register`, userData)
+            let {error} = response.data
+            if(error){
+                loading.style.display = 'none'
+                console.log(error)
+                setError(error)
+                setTimeout( ()=>{
+                    setError('')
+                },6000)
+            }
+            else{
+                loading.style.display = 'none'
+                props.history.push({ pathname: '/login' });
+                console.log('register succed')
+            }
+        } catch (err) {
             loading.style.display = 'none'
-            console.log(error)
-            setError(error)
+            const errorMsg = err.response?.data?.error || 'Erro ao registrar. Tente novamente.'
+            setError(errorMsg)
             setTimeout( ()=>{
                 setError('')
             },6000)
         }
-        else{
-            props.history.push({ pathname: '/login' });
-            console.log('register succed')
-        }   
     }
 
     const registerByPress = (e) =>{
@@ -57,41 +65,41 @@ const Register = (props) => {
             <div className='register-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <h1>Register</h1>
+                        <h1>Registrar</h1>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
                     {error !== '' ?  <ErrorMsg info={error}/>
                         
                         : ''}
-                        <p>Email:</p>
+                        <p>E-mail:</p>
                         <input type="email" 
-                            placeholder='Email...'
+                            placeholder='E-mail...'
                             className='form-container-input'
                             name='email'    
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Senha:</p>
                         <input type="password"
-                            placeholder='Password...'
+                            placeholder='Senha...'
                             className='form-container-input'
                             name='password'
                             onChange={(e) => setPass(e.target.value)}
                         />
-                        <p>Confirm Password:</p>
+                        <p>Confirmar Senha:</p>
                         <input type="password"
-                            placeholder='Password...'
+                            placeholder='Senha...'
                             className='form-container-input'
                             name='confirmPassword'
                             onChange={(e) => setConfirmPass(e.target.value)}
                             onKeyPress={(e) => registerByPress(e)}
                         /> 
                         <div className='reg-btn-div'>
-                            <button onClick={handleRegister} className='reg-submit'>Register</button>
+                            <button onClick={handleRegister} className='reg-submit'>Registrar</button>
                         </div>
                         <div className='new-account-login'>
                             <Link to='/login' className='new-account-link'>
-                                Have account? <br/>Login Now!
+                                Já tem conta? <br/>Entre agora!
                             </Link> 
                         </div> 
                         <div className='login-div'>

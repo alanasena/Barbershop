@@ -1,0 +1,144 @@
+.rating-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rating-stars {
+    font-weight: bold;
+    color: #333;
+}
+
+.rating-count {
+    color: #666;
+    font-size: 14px;
+}
+
+.no-rating {
+    color: #999;
+    font-style: italic;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.btn-icon {
+    padding: 8px;
+    width: 35px;
+    height: 35px;
+    transition: all ease-in-out 0.3s;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-blue-color {
+    background-color: rgb(96, 195, 235);
+}
+
+.btn-blue-color:hover {
+    background-color: rgb(76, 175, 215);
+}
+
+.btn-red-color {
+    background-color: rgb(192, 96, 96);
+}
+
+.btn-red-color:hover {
+    background-color: rgb(172, 76, 76);
+}
+
+.btn-orange-color {
+    background-color: #ff9800;
+}
+
+.btn-orange-color:hover {
+    background-color: #f57c00;
+}
+
+.btn-green-color {
+    background-color: #4caf50;
+}
+
+.btn-green-color:hover {
+    background-color: #388e3c;
+}
+
+.ratings-row {
+    background-color: #f9f9f9;
+}
+
+.ratings-container {
+    padding: 20px;
+}
+
+.ratings-container h4 {
+    margin-top: 0;
+    color: rgb(18, 74, 126);
+    margin-bottom: 15px;
+}
+
+.ratings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rating-item {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #ffc107;
+}
+
+.rating-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.rating-user {
+    font-weight: bold;
+    color: #333;
+}
+
+.rating-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.rating-comment {
+    margin: 0;
+    color: #555;
+    font-style: italic;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.bg-action-white {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 640px) {
+    .btn-icon {
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+    }
+
+    .rating-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}

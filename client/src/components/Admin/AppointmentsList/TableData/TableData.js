@@ -19,7 +19,7 @@ const TableData = ({appointments}) => {
                 </span>    
             </span> 
             
-            : <span className='td-empty'>Empty</span>
+            : <span className='td-empty'>Vazio</span>
             } 
         </td>
     )

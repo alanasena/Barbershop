@@ -1,0 +1,191 @@
+.rating-container {
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+    background-color: rgb(241, 241, 241);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.rating-form {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
+    max-width: 600px;
+    width: 100%;
+}
+
+.rating-form h1 {
+    color: rgb(18, 74, 126);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.barber-info {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.barber-info h2 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.barber-info p {
+    color: #666;
+    margin: 0;
+    font-size: 16px;
+}
+
+.appointment-info {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.appointment-info p {
+    color: #1976d2;
+    margin: 0;
+    font-weight: 500;
+}
+
+.rating-section {
+    margin-bottom: 30px;
+}
+
+.rating-section label {
+    display: block;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+}
+
+.stars-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.star {
+    font-size: 35px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    opacity: 0.3;
+    filter: grayscale(100%);
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.star.filled {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.rating-value {
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-section {
+    margin-bottom: 30px;
+}
+
+.comment-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 18px;
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.comment-textarea:focus {
+    outline: none;
+    border-color: rgb(18, 74, 126);
+    box-shadow: 0 0 5px rgba(18, 74, 126, 0.3);
+}
+
+.char-count {
+    display: block;
+    text-align: right;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #999;
+}
+
+.submit-rating-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: rgb(72, 143, 209);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-rating-btn:hover {
+    background-color: rgb(56, 120, 180);
+}
+
+.submit-rating-btn:active {
+    transform: scale(0.98);
+}
+
+.error-msg {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #c62828;
+}
+
+.success-msg {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2e7d32;
+}
+
+.red-astrix {
+    color: red;
+    margin-left: 3px;
+}
+
+@media only screen and (max-width: 600px) {
+    .rating-form {
+        padding: 20px;
+    }
+
+    .star {
+        font-size: 28px;
+    }
+}

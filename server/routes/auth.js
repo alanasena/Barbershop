@@ -1,67 +1,144 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
 const NewUser = require('../models/User');
 
-var key = 'real secret keys should be long and random';
-var encryptor = require('simple-encryptor')(key);
-
-
 router.get('/', async (req, res) => {
-
-    // var encrypted = encryptor.encrypt('eliiii');
-    // console.log('encrypted: %s', encrypted);
-
-    // var decrypted = encryptor.decrypt(encrypted);
-    // console.log('decrypted: %s', decrypted);
-
     res.send('hi from the server')
 })
 
-
-router.post('/register', async (req, res) =>{
-    let {email, pass, confirmPass} = req.body
-
-    console.log('register data: ',req.body)
-    const userExists = await NewUser.find({ email: req.body.email })
-    if (userExists[0]) return res.send({error:'The user already exists'})
-
-    if( pass !== confirmPass) return res.send({error:'pass not match'})
-
-    // if i will put extra data it will not added to the DB because Sechma
-    // only the correct keys will added to the DB!
-    let username = email.substring(0, email.indexOf('@'))
-
-    const newUser = new NewUser({   
-      email:email,
-      password:pass,
-      name:username
+// Validações para registro
+const registerValidation = [
+    body('email').isEmail().normalizeEmail().withMessage('Email inválido'),
+    body('pass').isLength({ min: 3 }).withMessage('Senha deve ter no mínimo 3 caracteres'),
+    body('confirmPass').custom((value, { req }) => {
+        if (value !== req.body.pass) {
+            throw new Error('As senhas não coincidem');
+        }
+        return true;
     })
+];
 
-    newUser.save()
-    res.status(200).send('success')
-})
+router.post('/register', registerValidation, async (req, res) => {
+    try {
+        // Verificar erros de validação
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: errors.array()[0].msg });
+        }
 
-router.post('/login', async (req, res) => {
+        let {email, pass, confirmPass} = req.body;
 
+        // Verificar se usuário já existe
+        const userExists = await NewUser.findOne({ email: email.toLowerCase() });
+        if (userExists) {
+            return res.status(400).json({error: 'Usuário já existe'});
+        }
 
-    let {email, pass} = req.body
-    console.log('login data: ',req.body)
-    const userExists = await NewUser.find({email:email}) // return array of objects
-    // const userExists2 = await NewUser.findOne({_id:"5f2040182747a520a4b7a8be"}) // work only with id and return one object
-    if(!userExists[0]) return res.send({error:'Sorry user not found'})
-    
-    if(pass !== userExists[0].password) return res.send({error:'Sorry wrong password'})
-    
-    let username = email.substring(0, email.indexOf('@'))
-    let userPhone = 'phone...'
-    if(userExists[0].phone)
-        userPhone = userExists[0].phone
+        if (pass !== confirmPass) {
+            return res.status(400).json({error: 'As senhas não coincidem'});
+        }
 
-    res.send({id:userExists[0]._id,
-        status:'logged',name:username,
-        admin:email.includes('admin'),
-        phone:userPhone
-        })
-})
+        // Hash da senha
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(pass, salt);
 
+        // Criar nome de usuário a partir do email
+        let username = email.substring(0, email.indexOf('@'));
+
+        // Determinar se é admin (apenas se especificado explicitamente ou email específico)
+        // Por padrão, nenhum usuário é admin
+        const isAdmin = email.toLowerCase() === 'admin@barbershop.com' || req.body.isAdmin === true;
+
+        const newUser = new NewUser({   
+            email: email.toLowerCase(),
+            password: hashedPassword,
+            name: username,
+            admin: isAdmin
+        });
+
+        await newUser.save();
+        res.status(200).json({ message: 'Registro realizado com sucesso' });
+    } catch (error) {
+        console.error('Erro no registro:', error);
+        if (error.code === 11000) {
+            return res.status(400).json({error: 'Email já cadastrado'});
+        }
+        res.status(500).json({error: 'Erro ao registrar usuário'});
+    }
+});
+
+// Validações para login
+const loginValidation = [
+    body('email').isEmail().normalizeEmail().withMessage('Email inválido'),
+    body('pass').notEmpty().withMessage('Senha é obrigatória')
+];
+
+router.post('/login', loginValidation, async (req, res) => {
+    try {
+        // Verificar erros de validação
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: errors.array()[0].msg });
+        }
+
+        let {email, pass} = req.body;
+        
+        // Buscar usuário
+        const user = await NewUser.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(401).json({error: 'Usuário não encontrado'});
+        }
+        
+        // Verificar senha
+        let validPassword = false;
+        
+        // Se a senha no banco é hash bcrypt (começa com $2)
+        if (user.password.startsWith('$2')) {
+            validPassword = await bcrypt.compare(pass, user.password);
+        } else {
+            // Senha antiga em texto plano - comparar diretamente e migrar
+            if (user.password === pass) {
+                validPassword = true;
+                // Migrar senha para hash bcrypt
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(pass, salt);
+                await user.save();
+                console.log(`Senha do usuário ${user.email} migrada para bcrypt`);
+            }
+        }
+        
+        if (!validPassword) {
+            return res.status(401).json({error: 'Senha incorreta'});
+        }
+        
+        // Gerar token JWT
+        const token = jwt.sign(
+            { 
+                id: user._id, 
+                email: user.email, 
+                admin: user.admin || false 
+            },
+            process.env.JWT_SECRET || 'fallback_secret_key_change_in_production',
+            { expiresIn: '2d' }
+        );
+
+        let username = user.name || email.substring(0, email.indexOf('@'));
+        let userPhone = user.phone || '';
+
+        res.json({
+            id: user._id,
+            status: 'logged',
+            name: username,
+            admin: user.admin || false,
+            phone: userPhone,
+            token: token
+        });
+    } catch (error) {
+        console.error('Erro no login:', error);
+        res.status(500).json({error: 'Erro ao fazer login'});
+    }
+});
 
 module.exports = router;

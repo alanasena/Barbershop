@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import './AppointmentsList.css'
 import Row from './Row/Row'
-import axios from 'axios'
+import axiosInstance from '../../../utils/axiosConfig'
 import {getSundays, makeDate} from '../../../time'
 import {Link} from 'react-router-dom'
 
@@ -17,7 +17,7 @@ const AppointmentsList = () => {
         setThisSunday(makeDate(sundays.sunday))
         setLastSunday(makeDate(sundays.nextSunday))
 
-        axios.get('https://barber-appointments.herokuapp.com/getappointments').then((response)=>{
+        axiosInstance.get('/getappointments').then((response)=>{
             console.log(response.data)
 
             let {error} = response.data
@@ -32,6 +32,8 @@ const AppointmentsList = () => {
                 console.log('newAppointments: ',newAppointments)
                 setAppointments(newAppointments)
             }
+        }).catch(err => {
+            console.error('Erro ao buscar agendamentos:', err)
         })
     },[])
 
@@ -39,30 +41,30 @@ const AppointmentsList = () => {
     return (
         <div className='appointments-list'>
             <div>
-                <h1>Control Panel</h1>
+                <h1>Painel de Controle</h1>
                 <div className='admin-profile-links-container'>
                     <Link to='/' className='admin-profile-link'>
-                        Home 
+                        Início 
                     </Link>
                     /
                     <Link to='/profile' className='admin-profile-link'>
-                        Profile 
+                        Perfil 
                     </Link>
                 </div>
             </div>
             
-            <h3>The appointments are between {`${thisSunday} and ${lastSunday}`}</h3>
+            <h3>Os agendamentos estão entre {`${thisSunday} e ${lastSunday}`}</h3>
         
             <table>
                 <thead>
                     <tr className='table-header'>
                         <td id='td-white'></td>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
+                        <th>Domingo</th>
+                        <th>Segunda</th>
+                        <th>Terça</th>
+                        <th>Quarta</th>
+                        <th>Quinta</th>
+                        <th>Sexta</th>
                     </tr>
                 </thead>
                 <tbody>

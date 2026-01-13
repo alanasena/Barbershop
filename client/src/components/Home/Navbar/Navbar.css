@@ -12,6 +12,9 @@
     padding-right: 30px;
     background-color: rgb(0, 0, 0,0.6);
     z-index: 99;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .navbar-logo{
@@ -32,12 +35,21 @@
 .navbar-ul{
     display: flex;
     align-items: center;
+    justify-content: center;
     list-style: none;
-    margin-left: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: wrap;
+    max-width: calc(100% - 500px);
+    box-sizing: border-box;
+    flex: 1;
 }
 
 .nav-items{
     margin: 0 10px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 .links{
@@ -45,7 +57,10 @@
     color: white;
     font-size: 17px;
     transition: ease-in-out all 0.3s;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .links:hover{
@@ -131,36 +146,52 @@
 
 .cp{
     margin-left: 10px;
-    padding: 5px 10px;
+    padding: 5px 12px;
     background-color: rgb(31, 174, 199);
     border-radius: 5px;
     border: none;
-    height: 30px;
-    color: white;
+    min-height: 30px;
+    height: auto;
+    line-height: 20px;
+    color: white !important;
     transition: all ease-in-out 0.3s;
     cursor: pointer;
-    display: none; 
+    display: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .cp:hover{
     color: white;
+    background-color: rgb(25, 145, 165);
 }
 
 .up{
     margin-left: 10px;
-    padding: 5px 10px;
+    padding: 5px 12px;
     background-color: rgb(31, 174, 199);
     border-radius: 5px;
     border: none;
-    height: 30px;
-    color: white;
+    min-height: 30px;
+    height: auto;
+    line-height: 20px;
+    color: white !important;
     transition: all ease-in-out 0.3s;
     cursor: pointer;
     display: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .up:hover{
     color: white;
+    background-color: rgb(25, 145, 165);
 }
 
 .humburger{
@@ -205,13 +236,18 @@
         
     }
 
-    #user-profile{
-        margin: 0px 0px;
-
+    .navbar-ul{
+        max-width: calc(100% - 200px);
+        margin-left: 20px;
     }
 
-    #control-panel{
-        margin: 0px 0px;
+    .nav-items{
+        margin: 0 5px;
+    }
+
+    .cp, .up{
+        font-size: 14px;
+        padding: 5px 8px;
     }
 }
 

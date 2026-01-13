@@ -4,19 +4,24 @@
 
 .user-profile-container{
     background-color: rgb(241, 241, 241);
-    padding-top: 59px;
+    padding-top: 60px;
     display: flex;
+    min-height: calc(100vh - 60px);
 }
 
 .user-profile-left{
     background-color: rgb(2,44,82);
     width: 15vw;
-
+    min-height: calc(100vh - 60px);
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 70px;
+    padding-top: 30px;
+    position: sticky;
+    top: 60px;
+    align-self: flex-start;
+    height: fit-content;
 }
 
 
@@ -76,11 +81,13 @@
 .user-profile-right{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center; 
-    padding-top: 60px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
     width: 85vw;
-
     overflow-y: auto;
 }
 
@@ -90,12 +97,21 @@
 
 .user-profile-box{
     width: 90%;
-    margin-bottom: 50px;
+    max-width: 900px;
+    margin-bottom: 30px;
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
     border-radius: 10px;
-    padding:25px;
+    padding: 30px;
+    color: #333;
+    box-sizing: border-box;
+    overflow: hidden;
+}
 
+.user-profile-box h1{
+    color: rgb(18, 74, 126);
+    margin: 0;
+    margin-bottom: 10px;
 }
 
 .profile-underline{
@@ -106,27 +122,38 @@
 }
 
 .user-profile-info-div p{
-    margin: 10px 0px;
+    margin: 8px 0px;
     font-weight: bold;
-    margin-right: 5px;
-
+    margin-right: 8px;
+    color: #333;
+    min-width: 80px;
 }
 
 .user-profile-info-div > div{
     display: flex;
     align-items: center;
+    margin: 5px 0;
+}
+
+.user-profile-info-div span{
+    color: #555;
+    font-weight: normal;
 }
 
 .user-profile-appointment{
-    margin-top: 20px;
+    margin-top: 25px;
     color: white;
-    max-width: 500px;
+    max-width: 600px;
+    width: 100%;
 }
 
 .user-profile-appointment-flex{
     display: flex;
     border: 1px solid white;
-
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 0;
+    width: 100%;
 }
 
 .user-profile-appointment-time{
@@ -135,37 +162,67 @@
     align-items: center;
     justify-content: center;
     background-color: rgb(45, 207, 67);
-
     margin-left: auto;
-    padding: 5px 10px;
+    padding: 15px 20px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     font-size: 17px;
-
+    min-width: 120px;
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .user-profile-appointment-btns{
-    padding: 10px;
+    padding: 15px;
     background-color: rgb(18, 74, 126);
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-appointment-btns p{
+    color: white;
+    margin: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+.user-profile-appointment-btns > div{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .user-profile-appointment-time p{
     margin: 2px 0px;
+    color: #333;
+    font-weight: bold;
 }
 
 
 .user-profile-appointment button{
-    height: 25px;
-    width: 100px;
-    border:none;
+    height: 35px;
+    min-width: 90px;
+    max-width: 120px;
+    width: auto;
+    flex: 0 1 auto;
+    border: none;
     border-radius: 5px;
     transition: 0.3s all ease-in-out;
     cursor: pointer;
-    margin-top: 19px;
-    margin-right: 10px; 
+    margin-top: 0;
+    margin-right: 0;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 14px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 #profile-btn-change:hover{
@@ -185,53 +242,85 @@
 #user-profile-updateinfo p{
     font-weight: bold;
     margin-bottom: 5px;
-
+    color: #333;
 }
 
 #user-profile-updateinfo input{
-    height: 25px;
-    width: 250px;
+    height: 35px;
+    width: 100%;
+    max-width: 400px;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #ddd;
     background-color: rgb(226, 224, 224);
     font-weight: bold;
     margin-bottom: 15px;
-    padding-left: 10px;
-
+    padding-left: 12px;
+    font-size: 14px;
 }
 
 .profile-update-btn{
-    height: 32px;
-    width: 150px;
-    border:none;
+    height: 38px;
+    min-width: 120px;
+    max-width: 200px;
+    width: auto;
+    border: none;
     border-radius: 10px;
     transition: 0.3s all ease-in-out;
     cursor: pointer;
     margin-top: 10px;
     background-color: rgb(72, 143, 209);
     color: white;
-
+    font-size: 15px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 #user-profile-delete-acc p{
     font-size: 18px;
     width: 50%;
+    color: #333;
 }
 
 #profile-delete-btn{
-    height: 32px;
-    width: 150px;
-    border:none;
+    height: 38px;
+    min-width: 120px;
+    max-width: 200px;
+    width: auto;
+    border: none;
     border-radius: 10px;
     transition: 0.3s all ease-in-out;
     cursor: pointer;
     margin-top: 15px;
     background-color: rgb(223, 83, 83);
     color: white;
+    font-size: 15px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 .profile-mr-bottom{
     margin-bottom: 20px;
+}
+
+.rate-barber-btn{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ffc107;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.rate-barber-btn:hover{
+    background-color: #ffb300;
+    transform: scale(1.05);
+    color: #333;
+    text-decoration: none;
 }
 
 
@@ -245,7 +334,6 @@
 
 @media only screen and (max-width: 730px){
 
-
     .user-profile-left{width: 230px;}
 
     .user-profile-left ul li a{font-size: 14px;}
@@ -255,6 +343,40 @@
     #user-profile-delete-acc p{
         font-size: 18px;
         width: 90%;
+    }
+
+    .user-profile-appointment-flex{
+        flex-direction: column;
+    }
+
+    .user-profile-appointment-time{
+        width: 100%;
+        border-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .user-profile-appointment-btns{
+        border-radius: 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .user-profile-appointment button{
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .profile-update-btn,
+    #profile-delete-btn{
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .user-profile-box{
+        width: 95%;
+        padding: 20px;
     }
 
 }

@@ -9,37 +9,63 @@ const Navbar = () => {
     const [day, setDay] = useState('sun')
     const [workTime, setWorkTime] = useState('')
     const [name, setName] = useState('user')
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
     
     useEffect(()=>{
-        
-        let loginAndReg = document.querySelector('.login-reg-links')
-        let helloUser = document.querySelector('.user-loggedIn')
-        let controlPanel = document.querySelector('.cp')
-        let userProfile = document.querySelector('.up')
+        const updateDisplay = () => {
+            let loginAndReg = document.querySelector('.login-reg-links')
+            let helloUser = document.querySelector('.user-loggedIn')
+            let controlPanel = document.querySelector('.cp')
+            let userProfile = document.querySelector('.up')
 
-        let {day} = time()
-        console.log(day)
-        dayOfWeek(day)
-        setName(getCookie('name'))
-        if(getCookie('admin') === 'true'){
-            controlPanel.style.display = 'block'
-            userProfile.style.display = 'none'
-
-        }
-        else{
-            controlPanel.style.display = 'none'
-            userProfile.style.display = 'block'
-        }
- 
-        if(checkCookie('status')){
-            helloUser.style.display = 'flex'
-            loginAndReg.style.display = 'none'
+            let {day} = time()
+            dayOfWeek(day)
+            const userName = getCookie('name')
+            setName(userName)
             
-        }else{
-            helloUser.style.display = 'none'
-            loginAndReg.style.display = 'flex'
-            userProfile.style.display = 'none'
+            const adminCookie = getCookie('admin');
+            const loggedIn = checkCookie('status');
+            setIsLoggedIn(loggedIn);
+            
+            console.log('Admin cookie value:', adminCookie, 'Type:', typeof adminCookie);
+            
+            const isAdminUser = adminCookie === 'true' || adminCookie === true || adminCookie === 'True';
+            setIsAdmin(isAdminUser);
+            
+            if(controlPanel && userProfile){
+                if(isAdminUser){
+                    controlPanel.style.display = 'block'
+                    userProfile.style.display = 'block' // Admin também pode ver o perfil
+                    console.log('✅ Mostrando Painel de Controle E Perfil para admin')
+                }
+                else{
+                    controlPanel.style.display = 'none'
+                    userProfile.style.display = 'block'
+                    console.log('✅ Mostrando Perfil de Usuário')
+                }
+            } else {
+                console.log('⚠️ Elementos não encontrados:', {controlPanel: !!controlPanel, userProfile: !!userProfile})
+            }
+     
+            if(loginAndReg && helloUser){
+                if(loggedIn){
+                    helloUser.style.display = 'flex'
+                    loginAndReg.style.display = 'none'
+                    
+                }else{
+                    helloUser.style.display = 'none'
+                    loginAndReg.style.display = 'flex'
+                    if(userProfile) userProfile.style.display = 'none'
+                }
+            }
         }
+        
+        // Executar imediatamente e depois com delay
+        updateDisplay()
+        const timeoutId = setTimeout(updateDisplay, 100)
+        
+        return () => clearTimeout(timeoutId)
     },[])
 
     const logout = () =>{
@@ -76,22 +102,22 @@ const Navbar = () => {
                 </h1>
                 <ul className='navbar-ul'>
                     <li className='nav-items'>
-                        <a href="./#hero-navigate" className='links'>Home</a>
+                        <a href="./#hero-navigate" className='links'>Início</a>
                     </li>
                     <li className='nav-items'>
-                        <a href="./#what-we-do" className='links'>Service</a> 
+                        <a href="./#what-we-do" className='links'>Serviços</a> 
                     </li>
                     <li className='nav-items'>
-                        <a href="./#hours-navigate" className='links'> Hours</a>
+                        <a href="./#hours-navigate" className='links'>Horários</a>
                     </li>
                     <li className='nav-items'>
                         <Link className='links cp' to='/admin'>
-                            Control Panel
+                            Painel de Controle
                         </Link>
                     </li>
                     <li className='nav-items'>
                         <Link className='links up' to='/profile'>
-                            User Profile
+                            Perfil do Usuário
                         </Link>
                     </li>
                 </ul>
@@ -109,18 +135,18 @@ const Navbar = () => {
 
                 <div className='login-reg-links'>
                     <Link className='links login-link disappear' to='/login'>
-                        Login
+                        Entrar
                     </Link>
                 
                     <span className='log-reg-separator disappear'> / </span>
                     <Link className='links disappear' to='/register'>
-                        Register
+                        Registrar
                     </Link>
                 </div>
 
                 <div className='user-loggedIn'>
-                    <p className='disappear'>Hello, {name} !</p>
-                    <button className='disappear' onClick={logout}>Logout</button>
+                    <p className='disappear'>Olá, {name}!</p>
+                    <button className='disappear' onClick={logout}>Sair</button>
                 </div>
 
             
