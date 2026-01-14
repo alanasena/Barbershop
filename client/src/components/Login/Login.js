@@ -29,7 +29,7 @@ const Login = (props) => {
 
         try {
             let response = await axios.post(`${API_URL}/login`, userData)
-            let {id, status, error, name, admin, barber, barberId, phone, token} = response.data
+            let {id, status, error, name, admin, phone, token} = response.data
             if(error){
                 loading.style.display = 'none'
                 console.log(error)
@@ -40,9 +40,8 @@ const Login = (props) => {
             }else{
                 loading.style.display = 'none'
                 
-                console.log('🔑 Dados do login recebidos:', {id, status, name, admin, barber, phone: phone ? 'presente' : 'vazio'});
+                console.log('🔑 Dados do login recebidos:', {id, status, name, admin, phone: phone ? 'presente' : 'vazio'});
                 console.log('   Admin?', admin, '(tipo:', typeof admin, ')');
-                console.log('   Barbeiro?', barber, '(tipo:', typeof barber, ')');
                 
                 setCookie('id', id ,2)
                 setCookie('status', status ,2)
@@ -51,13 +50,6 @@ const Login = (props) => {
                 const adminValue = admin ? 'true' : 'false';
                 setCookie('admin', adminValue ,2)
                 console.log('   Cookie admin setado como:', adminValue);
-                
-                const barberValue = barber ? 'true' : 'false';
-                setCookie('barber', barberValue ,2)
-                if(barberId) {
-                    setCookie('barberId', barberId ,2)
-                }
-                console.log('   Cookie barber setado como:', barberValue);
                 
                 setCookie('phone', phone ,2)
                 if(token) {
@@ -68,11 +60,8 @@ const Login = (props) => {
                 if(admin) {
                     console.log('✅ Usuário é ADMIN - Redirecionando para /admin');
                     props.history.push({ pathname: '/admin' });
-                } else if(barber) {
-                    console.log('✅ Usuário é BARBEIRO - Redirecionando para /barber/appointments');
-                    props.history.push({ pathname: '/barber/appointments' });
                 } else {
-                    console.log('ℹ️ Usuário comum - Redirecionando para /appointment');
+                    console.log('ℹ️ Usuário NÃO é admin - Redirecionando para /appointment');
                     props.history.push({ pathname: '/appointment' });
                 }
                 console.log('✅ Login bem-sucedido');

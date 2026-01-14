@@ -16,15 +16,12 @@ export const AdminRoute = ({component: Components, ...rest}) => {
             console.log('   Status cookie:', statusCookie);
             console.log('   Está logado?', isLoggedIn);
             
-            // Verificar se é admin ou barbeiro
-            const barberCookie = getCookie('barber');
+            // Verificar se é admin (várias formas possíveis do cookie)
             const isAdmin = adminCookie === 'true' || adminCookie === true || adminCookie === 'True';
-            const isBarber = barberCookie === 'true' || barberCookie === true || barberCookie === 'True';
             console.log('   É admin?', isAdmin);
-            console.log('   É barbeiro?', isBarber);
             
-            if ((isAdmin || isBarber) && isLoggedIn) {
-                console.log('✅✅✅ ADMIN OU BARBEIRO AUTORIZADO - Renderizando Painel de Controle');
+            if (isAdmin && isLoggedIn) {
+                console.log('✅✅✅ ADMIN AUTORIZADO - Renderizando Painel de Controle');
                 return <Components {...props} />;
             } else {
                 console.log('❌❌❌ ACESSO NEGADO - Redirecionando...');
@@ -32,8 +29,8 @@ export const AdminRoute = ({component: Components, ...rest}) => {
                     console.log('   Motivo: Não está logado');
                     return <Redirect to='/login'/>;
                 }
-                if (!isAdmin && !isBarber) {
-                    console.log('   Motivo: Não é admin nem barbeiro');
+                if (!isAdmin) {
+                    console.log('   Motivo: Cookie admin não é "true" (valor:', adminCookie, ')');
                 }
                 return <Redirect to='/appointment'/>;
             }

@@ -194,31 +194,6 @@
     background-color: rgb(25, 145, 165);
 }
 
-.bp{
-    margin-left: 10px;
-    padding: 5px 12px;
-    background-color: rgb(255, 152, 0);
-    border-radius: 5px;
-    border: none;
-    min-height: 30px;
-    height: auto;
-    line-height: 20px;
-    color: white !important;
-    transition: all ease-in-out 0.3s;
-    cursor: pointer;
-    display: none;
-    white-space: nowrap;
-    box-sizing: border-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.bp:hover{
-    color: white;
-    background-color: rgb(230, 126, 0);
-}
-
 .humburger{
     padding: 8px;
     height: 30px;

@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const NewUser = require('../models/User');
-const Barber = require('../models/Barber');
 
 router.get('/', async (req, res) => {
     res.send('hi from the server')
@@ -114,18 +113,12 @@ router.post('/login', loginValidation, async (req, res) => {
             return res.status(401).json({error: 'Senha incorreta'});
         }
         
-        // Verificar se o usuário é um barbeiro
-        const barber = await Barber.findOne({ userId: user._id });
-        const isBarber = !!barber;
-
         // Gerar token JWT
         const token = jwt.sign(
             { 
                 id: user._id, 
                 email: user.email, 
-                admin: user.admin || false,
-                barber: isBarber,
-                barberId: isBarber ? barber._id.toString() : null
+                admin: user.admin || false 
             },
             process.env.JWT_SECRET || 'fallback_secret_key_change_in_production',
             { expiresIn: '2d' }
@@ -139,8 +132,6 @@ router.post('/login', loginValidation, async (req, res) => {
             status: 'logged',
             name: username,
             admin: user.admin || false,
-            barber: isBarber,
-            barberId: isBarber ? barber._id.toString() : null,
             phone: userPhone,
             token: token
         });

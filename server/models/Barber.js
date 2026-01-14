@@ -34,11 +34,6 @@ const barberSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
-    },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
-        required: false // Opcional para manter compatibilidade com dados existentes
     }
 }, {
     timestamps: true
