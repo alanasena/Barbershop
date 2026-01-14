@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const NewAppointment = require('../models/Appointment');
 const Users = require('../models/User');
+const Barber = require('../models/Barber');
 const { auth, adminAuth } = require('../middleware/auth');
 
 router.post('/appointment', auth, async (req, res) => {
@@ -154,6 +155,53 @@ router.get('/getusers', adminAuth, async(req, res) => {
     } catch (error) {
         console.error('Erro ao buscar usuários:', error);
         res.status(500).json({error: 'Erro ao buscar usuários'});
+    }
+});
+
+// Buscar agendamentos do barbeiro logado
+router.get('/barber/appointments', auth, async(req, res) => {
+    try {
+        const userId = req.user.id;
+        
+        // Verificar se o usuário é um barbeiro
+        const barber = await Barber.findOne({ userId });
+        if (!barber) {
+            return res.status(403).json({error: 'Acesso negado. Você não é um barbeiro.'});
+        }
+
+        // Buscar agendamentos deste barbeiro
+        const appointments = await NewAppointment.find({ barberId: barber._id })
+            .sort({ timeInMS: 1 }); // Ordenar por data/hora
+        
+        if (appointments.length === 0) {
+            return res.json([]); // Retornar array vazio ao invés de erro
+        }
+
+        // Buscar informações dos usuários para cada agendamento
+        const appointmentsWithUserInfo = await Promise.all(
+            appointments.map(async (appointment) => {
+                const user = await Users.findById(appointment.userID);
+                return {
+                    _id: appointment._id,
+                    appointmentKey: appointment.appointmentKey,
+                    name: appointment.name || user?.name || 'N/A',
+                    email: user?.email || 'N/A',
+                    phone: appointment.phone || user?.phone || 'N/A',
+                    date: appointment.date,
+                    time: appointment.time,
+                    day: appointment.day,
+                    timeInMS: appointment.timeInMS,
+                    isCompleted: appointment.isCompleted || false,
+                    isRated: appointment.isRated || false,
+                    createdAt: appointment.createdAt
+                };
+            })
+        );
+
+        res.json(appointmentsWithUserInfo);
+    } catch (error) {
+        console.error('Erro ao buscar agendamentos do barbeiro:', error);
+        res.status(500).json({error: 'Erro ao buscar agendamentos'});
     }
 });
 

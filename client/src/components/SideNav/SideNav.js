@@ -15,6 +15,7 @@ const SideNav = () => {
         let loginAndReg = document.querySelector('.side-log-reg')
         let helloUser = document.querySelector('.side-logout')
         let controlPanel = document.querySelector('.side-cp')
+        let barberPanel = document.querySelector('.side-bp')
         let userProfile = document.querySelector('.side-up')
 
         let {day} = time()
@@ -25,15 +26,24 @@ const SideNav = () => {
             setName(userName)
 
         const adminCookie = getCookie('admin');
+        const barberCookie = getCookie('barber');
         const isAdminUser = adminCookie === 'true' || adminCookie === true || adminCookie === 'True';
+        const isBarberUser = barberCookie === 'true' || barberCookie === true || barberCookie === 'True';
         
-        if(controlPanel && userProfile){
+        if(controlPanel && barberPanel && userProfile){
             if(isAdminUser){
                 controlPanel.style.display = 'block'
+                barberPanel.style.display = 'none'
                 userProfile.style.display = 'block' // Admin também pode ver o perfil
+            }
+            else if(isBarberUser){
+                controlPanel.style.display = 'block' // Barbeiro também vê Painel de Controle
+                barberPanel.style.display = 'block' // Barbeiro também vê Meus Agendamentos
+                userProfile.style.display = 'block' // Barbeiro também pode ver o perfil
             }
             else{
                 controlPanel.style.display = 'none'
+                barberPanel.style.display = 'none'
                 userProfile.style.display = 'block'
             }
         }
@@ -48,6 +58,7 @@ const SideNav = () => {
             if(loginAndReg) loginAndReg.style.display = 'flex'
             if(userProfile) userProfile.style.display = 'none'
             if(controlPanel) controlPanel.style.display = 'none'
+            if(barberPanel) barberPanel.style.display = 'none'
         }
     },[])
 
@@ -57,6 +68,9 @@ const SideNav = () => {
         deleteCookie('id')
         deleteCookie('status')
         deleteCookie('admin')
+        deleteCookie('barber')
+        deleteCookie('barberId')
+        deleteCookie('token')
         window.location.replace('/')
     }
 
@@ -95,6 +109,11 @@ const SideNav = () => {
                     <li id='control-panel' className='nav-items'>
                         <Link className='links side-cp' to='/admin'>
                             Painel de Controle
+                        </Link>
+                    </li>
+                    <li id='barber-appointments' className='nav-items'>
+                        <Link className='links side-bp' to='/barber/appointments'>
+                            Meus Agendamentos
                         </Link>
                     </li>
                     <li id='user-profile' className='nav-items'>

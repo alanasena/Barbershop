@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Barber = require('../models/Barber');
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const { auth, adminAuth } = require('../middleware/auth');
 
 // Listar todos os barbeiros ativos (público)
@@ -37,19 +39,61 @@ router.get('/barbers/:id', async (req, res) => {
 // Criar barbeiro (apenas admin)
 router.post('/barbers', adminAuth, async (req, res) => {
     try {
-        const { name, email, phone, specialties } = req.body;
+        const { name, email, phone, specialties, password } = req.body;
         
-        const barberExists = await Barber.findOne({ email });
+        // Verificar se barbeiro já existe
+        const barberExists = await Barber.findOne({ email: email.toLowerCase() });
         if (barberExists) {
             return res.status(400).json({ error: 'Barbeiro já cadastrado com este email' });
         }
 
-        const barber = new Barber({ name, email, phone, specialties });
+        // Verificar se usuário já existe
+        const userExists = await User.findOne({ email: email.toLowerCase() });
+        if (userExists) {
+            return res.status(400).json({ error: 'Já existe um usuário com este email' });
+        }
+
+        // Gerar senha padrão se não fornecida
+        const defaultPassword = password || 'senha123'; // Senha padrão, deve ser alterada no primeiro login
+        
+        // Criar hash da senha
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(defaultPassword, salt);
+
+        // Criar usuário para o barbeiro
+        const newUser = new User({
+            email: email.toLowerCase(),
+            password: hashedPassword,
+            name: name,
+            phone: phone || '',
+            admin: false // Barbeiros não são admin
+        });
+        const savedUser = await newUser.save();
+
+        // Criar barbeiro vinculado ao usuário
+        const barber = new Barber({ 
+            name, 
+            email: email.toLowerCase(), 
+            phone, 
+            specialties: specialties || [],
+            userId: savedUser._id
+        });
         await barber.save();
         
-        res.status(201).json({ message: 'Barbeiro cadastrado com sucesso!', barber });
+        res.status(201).json({ 
+            message: 'Barbeiro cadastrado com sucesso! Usuário criado automaticamente.', 
+            barber,
+            user: {
+                id: savedUser._id,
+                email: savedUser.email,
+                password: password ? 'Senha fornecida' : defaultPassword // Retornar senha apenas se não fornecida
+            }
+        });
     } catch (error) {
         console.error('Erro ao criar barbeiro:', error);
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Email já cadastrado no sistema' });
+        }
         res.status(500).json({ error: 'Erro ao criar barbeiro' });
     }
 });
@@ -142,6 +186,24 @@ router.get('/barbers/:id/ratings', async (req, res) => {
     } catch (error) {
         console.error('Erro ao buscar avaliações:', error);
         res.status(500).json({ error: 'Erro ao buscar avaliações' });
+    }
+});
+
+// Buscar perfil do barbeiro logado
+router.get('/barber/profile', auth, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const barber = await Barber.findOne({ userId })
+            .select('name email phone specialties averageRating totalRatings isActive');
+        
+        if (!barber) {
+            return res.status(404).json({ error: 'Você não é um barbeiro cadastrado' });
+        }
+        
+        res.json(barber);
+    } catch (error) {
+        console.error('Erro ao buscar perfil do barbeiro:', error);
+        res.status(500).json({ error: 'Erro ao buscar perfil do barbeiro' });
     }
 });
 

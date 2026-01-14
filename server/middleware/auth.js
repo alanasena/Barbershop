@@ -30,8 +30,9 @@ const adminAuth = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key_change_in_production');
     
-    if (!decoded.admin) {
-      return res.status(403).json({ error: 'Acesso negado. Apenas administradores.' });
+    // Permitir acesso para admin ou barbeiro
+    if (!decoded.admin && !decoded.barber) {
+      return res.status(403).json({ error: 'Acesso negado. Apenas administradores ou barbeiros.' });
     }
 
     req.user = decoded;

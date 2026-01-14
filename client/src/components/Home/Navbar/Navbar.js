@@ -17,6 +17,7 @@ const Navbar = () => {
             let loginAndReg = document.querySelector('.login-reg-links')
             let helloUser = document.querySelector('.user-loggedIn')
             let controlPanel = document.querySelector('.cp')
+            let barberPanel = document.querySelector('.bp')
             let userProfile = document.querySelector('.up')
 
             let {day} = time()
@@ -25,27 +26,38 @@ const Navbar = () => {
             setName(userName)
             
             const adminCookie = getCookie('admin');
+            const barberCookie = getCookie('barber');
             const loggedIn = checkCookie('status');
             setIsLoggedIn(loggedIn);
             
             console.log('Admin cookie value:', adminCookie, 'Type:', typeof adminCookie);
+            console.log('Barber cookie value:', barberCookie, 'Type:', typeof barberCookie);
             
             const isAdminUser = adminCookie === 'true' || adminCookie === true || adminCookie === 'True';
+            const isBarberUser = barberCookie === 'true' || barberCookie === true || barberCookie === 'True';
             setIsAdmin(isAdminUser);
             
-            if(controlPanel && userProfile){
+            if(controlPanel && barberPanel && userProfile){
                 if(isAdminUser){
                     controlPanel.style.display = 'block'
+                    barberPanel.style.display = 'none'
                     userProfile.style.display = 'block' // Admin também pode ver o perfil
                     console.log('✅ Mostrando Painel de Controle E Perfil para admin')
                 }
+                else if(isBarberUser){
+                    controlPanel.style.display = 'block' // Barbeiro também vê Painel de Controle
+                    barberPanel.style.display = 'block' // Barbeiro também vê Meus Agendamentos
+                    userProfile.style.display = 'block' // Barbeiro também pode ver o perfil
+                    console.log('✅ Mostrando Painel de Controle, Meus Agendamentos E Perfil para barbeiro')
+                }
                 else{
                     controlPanel.style.display = 'none'
+                    barberPanel.style.display = 'none'
                     userProfile.style.display = 'block'
                     console.log('✅ Mostrando Perfil de Usuário')
                 }
             } else {
-                console.log('⚠️ Elementos não encontrados:', {controlPanel: !!controlPanel, userProfile: !!userProfile})
+                console.log('⚠️ Elementos não encontrados:', {controlPanel: !!controlPanel, barberPanel: !!barberPanel, userProfile: !!userProfile})
             }
      
             if(loginAndReg && helloUser){
@@ -74,6 +86,9 @@ const Navbar = () => {
         deleteCookie('id')
         deleteCookie('status')
         deleteCookie('admin')
+        deleteCookie('barber')
+        deleteCookie('barberId')
+        deleteCookie('token')
         window.location.replace('/')
     }
 
@@ -113,6 +128,11 @@ const Navbar = () => {
                     <li className='nav-items'>
                         <Link className='links cp' to='/admin'>
                             Painel de Controle
+                        </Link>
+                    </li>
+                    <li className='nav-items'>
+                        <Link className='links bp' to='/barber/appointments'>
+                            Meus Agendamentos
                         </Link>
                     </li>
                     <li className='nav-items'>
