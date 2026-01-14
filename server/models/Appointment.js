@@ -1,52 +1,33 @@
+const { Mongoose } = require("mongoose")
+
+
 const mongoose = require('mongoose')
 
 const newAppointment = new mongoose.Schema({
 
     userID:{
-        type:String,
-        required: [true, 'ID do usuário é obrigatório']
+        type:String
     },
     appointmentKey:{
-        type:String,
-        required: [true, 'Chave do agendamento é obrigatória'],
-        unique: true
+        type:String
     },
     name:{
-        type:String,
-        required: [true, 'Nome é obrigatório']
+        type:String
     },
     date:{
-        type:String,
-        required: [true, 'Data é obrigatória']
+        type:String
     },
     time:{
-        type:String,
-        required: [true, 'Hora é obrigatória']
+        type:String
     },   
     phone:{
-        type:String,
-        trim: true
+        type:String
     },
     day:{
-        type:String,
-        required: [true, 'Dia da semana é obrigatório']
+        type:String
     },
     timeInMS:{
-        type:Number,
-        required: [true, 'Timestamp é obrigatório']
-    },
-    barberId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'barbers',
-        required: false
-    },
-    isCompleted: {
-        type: Boolean,
-        default: false
-    },
-    isRated: {
-        type: Boolean,
-        default: false
+        type:Number
     }
  })
 

@@ -6,19 +6,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import {getCookie, checkCookie} from '../../cookies'
 import {fullTime} from '../../time'
-import axiosInstance from '../../utils/axiosConfig'
+import axios from 'axios'
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 
 const Appointment = (props) => {
     const [startDate, setStartDate] = useState(new Date())
     const [userTime, setUserTime] = useState('00:00')
     const [userDate, setUserDate] = useState('')
-    const [phone, setPhone] = useState('telefone...')
+    const [phone, setPhone] = useState('phone...')
     const [dayOfWeek, setDayOfWeek] = useState('')
     const [time, setTime] = useState(0)
     const [error, setError] = useState('')
-    const [barbers, setBarbers] = useState([])
-    const [selectedBarber, setSelectedBarber] = useState(null)
 
     const options = [
         { value:'10:00',  label:'10:00' },
@@ -58,41 +56,6 @@ const Appointment = (props) => {
         }
     },[])
 
-    useEffect(() => {
-        const fetchBarbers = async () => {
-            try {
-                console.log('Buscando barbeiros...');
-                const response = await axiosInstance.get('/api/barbers');
-                console.log('Resposta da API barbeiros:', response.data);
-                console.log('Status:', response.status);
-                
-                if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-                    // Ordenar por avaliação (maior primeiro) e depois por nome
-                    const sortedBarbers = response.data.sort((a, b) => {
-                        if (b.averageRating !== a.averageRating) {
-                            return b.averageRating - a.averageRating;
-                        }
-                        return a.name.localeCompare(b.name);
-                    });
-                    setBarbers(sortedBarbers);
-                    console.log('✅ Barbeiros carregados:', sortedBarbers.length);
-                    sortedBarbers.forEach((b, i) => console.log(`   ${i+1}. ${b.name}`));
-                } else {
-                    console.warn('⚠️ Nenhum barbeiro encontrado ou resposta inválida:', response.data);
-                    setBarbers([]);
-                }
-            } catch (error) {
-                console.error('❌ Erro ao buscar barbeiros:', error);
-                console.error('Status:', error.response?.status);
-                console.error('Mensagem:', error.response?.data || error.message);
-                console.error('URL completa:', error.config?.url);
-                setError('Erro ao carregar lista de barbeiros. Verifique o console para mais detalhes.');
-                setBarbers([]);
-            }
-        };
-        fetchBarbers();
-    }, [])
-
     if(phone.length >= 6 && userTime !== '' && userDate!== '')  {
         let x = document.querySelector('.appointment-data')
         x.classList.add('appointment-data-show')
@@ -102,47 +65,33 @@ const Appointment = (props) => {
 
         let appointmentData = {}
         const obj = fullTime(dayOfWeek)
+        appointmentData.userID = getCookie('id')
         appointmentData.key = userDate+userTime
+        appointmentData.name = getCookie('name')
         appointmentData.date = userDate
         appointmentData.time = userTime
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
 
-        try {
-            let response = await axiosInstance.post('/changeappointment', appointmentData)
-            let { error, message } = response.data
-            if(error){
-                console.log(error)
-                setError(error)
-                setTimeout( ()=>{
-                    setError('')
-                },6000)
-            }else{
-                console.log(message)
-                alert(message || 'Agendamento alterado com sucesso!')
-                props.history.push({ pathname: '/profile' });
-            }
-        } catch (err) {
-            const errorMsg = err.response?.data?.error || 'Erro ao alterar agendamento'
-            setError(errorMsg)
+        let response = await axios.post('https://barber-appointments.herokuapp.com/changeappointment', appointmentData)
+        let { error } = response.data
+        if(error){
+            console.log(error)
+            setError(error)
             setTimeout( ()=>{
                 setError('')
             },6000)
+        }else{
+            console.log(response.data)
+            alert('change')
         }
        
     }
 
     const makeAppointment = async() =>{
-        if (!selectedBarber) {
-            setError('Por favor, selecione um barbeiro')
-            setTimeout( ()=>{
-                setError('')
-            },6000)
-            return
-        }
-
         let appointmentData = {}
         const obj = fullTime(dayOfWeek)
+        appointmentData.userID = getCookie('id')
         appointmentData.key = userDate+userTime
         appointmentData.name = getCookie('name')
         appointmentData.date = userDate
@@ -150,26 +99,17 @@ const Appointment = (props) => {
         appointmentData.phone = phone
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
-        appointmentData.barberId = selectedBarber.value
        
-        try {
-            let response = await axiosInstance.post('/appointment', appointmentData)
-            let { error, message } = response.data
-            if(error){
-                setError(error)
-                setTimeout( ()=>{
-                    setError('')
-                },6000)
-            }else{
-                alert(message || 'Agendamento realizado com sucesso!')
-                props.history.push({ pathname: '/profile' });
-            }
-        } catch (err) {
-            const errorMsg = err.response?.data?.error || 'Erro ao criar agendamento'
-            setError(errorMsg)
+        let response = await axios.post('https://barber-appointments.herokuapp.com/appointment', appointmentData)
+        let { error } = response.data
+        if(error){
+            setError(error)
             setTimeout( ()=>{
                 setError('')
             },6000)
+        }else{
+            alert(response.data)
+            props.history.push({ pathname: '/profile' });
         }
     }
  
@@ -201,12 +141,12 @@ const Appointment = (props) => {
             <Navbar/>
             <div className='appointment-container'>
                 <div className='appointment-form'>
-                    <h1>Fazer Agendamento</h1>
+                    <h1>Make Appointment</h1>
                     <div className='appointment-inner-container'>
                         {error !== '' ?  <ErrorMsg info={error}/>
                         
                         : ''}
-                        <p>Escolha a data:<span className='red-astrix'>*</span></p>
+                        <p>Please choose date:<span className='red-astrix'>*</span></p>
                         <DatePicker
                             selected={startDate}
                             onChange={handleChange}
@@ -217,7 +157,7 @@ const Appointment = (props) => {
                         />
                     </div>
                     <div className='appointment-inner-container'>
-                        <p>Escolha o horário:<span className='red-astrix'>*</span></p>
+                        <p>Please choose time:<span className='red-astrix'>*</span></p>
                         <Select
                             value={updatedOptions.filter((option) => {
                                 return option.value === userTime
@@ -229,52 +169,22 @@ const Appointment = (props) => {
                     </div>
 
                     <div id='appo-phone' className='appointment-inner-container'>
-                        <p>Vamos entrar em contato: <span className='red-astrix'>*</span></p>
-                        <input type="tel" className='phone-input' placeholder='telefone...' 
-                        value={phone ? phone : 'telefone...'}
+                        <p>Lets be in touch: <span className='red-astrix'>*</span></p>
+                        <input type="tel" className='phone-input' placeholder='phone...' 
+                        value={phone ? phone : 'phone...'}
                         onChange={(e)=>setPhone(e.target.value)}/>
                     </div>
-                    <div id='appo-barber' className='appointment-inner-container' style={{display: getCookie('change') !== '' ? 'none' : 'block'}}>
-                        <p>Selecione o barbeiro:<span className='red-astrix'>*</span></p>
-                        {barbers.length > 0 ? (
-                            <Select
-                                value={selectedBarber}
-                                onChange={(option) => {
-                                    console.log('Barbeiro selecionado:', option);
-                                    setSelectedBarber(option);
-                                }}
-                                options={barbers.map(barber => ({
-                                    value: barber._id,
-                                    label: `${barber.name}${barber.averageRating > 0 ? ` ⭐ ${barber.averageRating.toFixed(1)}` : ''}`
-                                }))}
-                                className='barber-picker'
-                                placeholder="Selecione um barbeiro"
-                                isSearchable
-                                noOptionsMessage={() => "Nenhum barbeiro disponível"}
-                            />
-                        ) : (
-                            <div style={{padding: '10px', background: '#fff3cd', borderRadius: '5px', color: '#856404'}}>
-                                Carregando barbeiros...
-                            </div>
-                        )}
-                        {barbers.length === 0 && (
-                            <p style={{fontSize: '12px', color: '#999', marginTop: '5px'}}>
-                                Se não aparecer nenhum barbeiro, verifique se há barbeiros cadastrados no sistema.
-                            </p>
-                        )}
-                    </div>
                     <div id='make-btn' className='appointment-inner-container'>
-                        <button onClick={makeAppointment} className='appointment-btn'>Enviar</button>
+                        <button onClick={makeAppointment} className='appointment-btn'>Send</button>
                     </div>
                     <div id='change-btn' className='appointment-inner-container'>
-                        <button onClick={changeAppointment} className='appointment-btn'>Atualizar</button>
+                        <button onClick={changeAppointment} className='appointment-btn'>Update</button>
                     </div>
                     <div className='appointment-data'>
-                        <h3>Agendamento será feito para:</h3>
-                        <p>Data:  <span>{userDate}</span></p>
-                        <p>Hora: <span>{userTime}</span></p>
-                        <p>Telefone: <span>{phone}</span></p>
-                        {selectedBarber && <p>Barbeiro: <span>{selectedBarber.label}</span></p>}
+                        <h3>Appointment will be set for:</h3>
+                        <p>Date:  <span>{userDate}</span></p>
+                        <p>Hour: <span>{userTime}</span></p>
+                        <p>Phone: <span>{phone}</span></p>
                     </div>
                 </div>
             </div> 

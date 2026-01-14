@@ -6,13 +6,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
-import PersonIcon from '@material-ui/icons/Person';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import UserList from '../Admin/UsersList/UsersList'
 import AppointmentsList from '../Admin/AppointmentsList/AppointmentsList'
-import BarbersList from '../Admin/BarbersList/BarbersList'
 import './Tabs.css'
 
 function TabPanel(props) {
@@ -28,7 +26,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          {children}
+          <Typography>{children}</Typography>
         </Box>
       )}
     </div>
@@ -81,9 +79,8 @@ export default function ScrollableTabsButtonPrevent() {
           aria-label="scrollable prevent tabs example"
           className='tabs'
         >
-          <Tab icon={<PhoneIcon />} label="Agendamentos" aria-label="agendamentos" {...a11yProps(0)} />
-          <Tab icon={<PersonPinIcon />} label="Usuários" aria-label="usuarios" {...a11yProps(1)} />
-          <Tab icon={<PersonIcon />} label="Barbeiros" aria-label="barbeiros" {...a11yProps(2)} />
+          <Tab icon={<PhoneIcon />} aria-label="phone" {...a11yProps(0)} />
+          <Tab icon={<PersonPinIcon />} aria-label="favorite" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel  value={value} index={0}>
@@ -91,9 +88,6 @@ export default function ScrollableTabsButtonPrevent() {
       </TabPanel>
       <TabPanel className='tab-panel' value={value} index={1}>
         <UserList/>
-      </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={2}>
-        <BarbersList/>
       </TabPanel>
     </div>
   );

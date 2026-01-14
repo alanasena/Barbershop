@@ -3,30 +3,17 @@ const mongoose = require('mongoose')
 const newUser = new mongoose.Schema({
 
     email:{
-        type:String,
-        required: [true, 'Email é obrigatório'],
-        unique: true,
-        lowercase: true,
-        trim: true,
-        match: [/^\S+@\S+\.\S+$/, 'Email inválido']
+        type:String
+
     },
     password:{
-        type:String,
-        required: [true, 'Senha é obrigatória'],
-        minlength: [3, 'Senha deve ter no mínimo 3 caracteres']
+        type:String
     },
     name:{
-        type:String,
-        required: [true, 'Nome é obrigatório'],
-        trim: true
+        type:String
     },
     phone:{
-        type:String,
-        trim: true
-    },
-    admin:{
-        type: Boolean,
-        default: false
+        type:String
     }
  })
 

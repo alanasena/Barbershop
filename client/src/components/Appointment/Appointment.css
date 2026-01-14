@@ -32,17 +32,6 @@
     border-radius: 5px;
 }
 
-.barber-picker{
-    width: 100%;
-    border: 1px solid rgb(90, 90, 90);
-    border-radius: 5px;
-}
-
-.barber-picker > div {
-    border: 1px solid rgb(90, 90, 90);
-    border-radius: 5px;
-}
-
 .appointment-inner-container{
     margin-bottom: 20px;
     /* border: 1px solid black; */

@@ -7,7 +7,6 @@ import Login from './components/Login/Login'
 import Admin from './components/Admin/Admin'
 import UserProfile from './components/UserProfile/UserProfile'
 import Appointment from './components/Appointment/Appointment'
-import Rating from './components/Rating/Rating'
 import { ProtectedRoute } from './protected.route'
 import {  AdminRoute } from './admin.route'
 
@@ -25,7 +24,6 @@ function App() {
           <ProtectedRoute component={Appointment} path='/appointment' />
           <AdminRoute component={Admin} path='/admin'/>
           <ProtectedRoute component={UserProfile} path='/profile' />
-          <ProtectedRoute component={Rating} path='/rating' />
           <Route path='*' component={() => '404 PAGE NOT FOUND'} />
 
         </Switch>

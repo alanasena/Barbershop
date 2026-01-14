@@ -1,22 +1,18 @@
 
 .side-navbar{
-    top:-100vh;
+    top:-50vh;
     height: 50vh;
     width: 100%;
     background-color: rgb(0, 0, 0,0.8);
     position: fixed;
     z-index: 100;
     color: white;
-    transition: top 0.4s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    transition: 0.4s ease-in-out all;
     border-bottom: 2px solid rgb(206, 177, 50);
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
 }
 
 .side-navbar-info{
@@ -38,23 +34,6 @@
 
 .side-navbar-avtive{
     top:60px;
-    pointer-events: auto;
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Garantir que elementos não apareçam quando o sideNav está escondido */
-.side-navbar:not(.side-navbar-avtive) {
-    top: -100vh !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-.side-navbar.side-navbar-avtive {
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
 }
 
 .side-navbar-ul{
@@ -89,7 +68,6 @@
 
 .side-logout{
     margin-top: 15px;
-    display: none;
 }
 
 .side-btn{
@@ -130,19 +108,9 @@
 
 }
 
-#control-panel{
-    width: 100%;
-}
+#control-panel{width: 100%;}
 
 #control-panel:hover{transform: scale(1.1);}
-
-/* Garantir que os li também escondam os links quando necessário */
-#control-panel,
-#user-profile {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 
 .side-cp{
@@ -155,13 +123,11 @@
     color: white;
     transition: all ease-in-out 0.3s;
     cursor: pointer;
-    display: none !important;
-    text-decoration: none;
+    display: none; 
 }
 
 .side-cp:hover{
     color: white;
-    text-decoration: none;
 }
 
 .side-up{
@@ -174,13 +140,11 @@
     color: white;
     transition: all ease-in-out 0.3s;
     cursor: pointer;
-    display: none !important;
-    text-decoration: none;
+    display: none; 
 }
 
 .side-up:hover{
     color: white;
-    text-decoration: none;
 }
 
 #user-profile{width: 100%;}
