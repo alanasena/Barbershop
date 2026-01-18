@@ -1,31 +1,34 @@
-RELATORIO DE MODIFICACOES (GIT) E DESCRICAO DO SISTEMA
+RELATORIO DE MODIFICACOES NO SISTEMA E DESCRICAO DE FUNCIONAMENTO
 
-Este documento resume as modificacoes registradas no Git e explica, em alto nivel, como o sistema funciona.
+Este documento informa as modificacoes realizadas no sistema e resume o
+funcionamento atual.
 
-1) MODIFICACOES REGISTRADAS NO GIT (ULTIMOS COMMITS)
+1) MODIFICACOES REALIZADAS NO SISTEMA (ESTADO ATUAL)
 
-- dfa79b5 (chore: organizar arquivos e ajustes do projeto)
-  - Adiciona um .gitignore para evitar arquivos locais e temporarios no repo.
-  - Remove arquivos de teste, relatorios locais e scripts auxiliares que nao sao
-    necessarios para o funcionamento do projeto.
+- Organizacao do repositorio:
+  - Adicionado .gitignore para evitar arquivos locais e temporarios no Git.
+  - Removidos scripts de teste, relatorios locais e arquivos auxiliares que nao
+    sao necessarios para executar o sistema.
 
-- 84c5624 (Revert "feat: Implementacao de seguranca, sistema de barbeiros e avaliacoes")
-  - Reverte o commit de recursos de barbeiros/avaliacoes e ajustes de seguranca,
-    retornando o projeto ao estado anterior a essa adicao.
+- Ajustes de codigo sem impacto funcional:
+  - Normalizacao de formato/linha em alguns arquivos do backend (sem alterar
+    regras de negocio).
 
-- e7b3e2c (Revert "feat: painel de barbeiro e ajustes de acesso")
-  - Reverte o painel do barbeiro e ajustes de permissao, mantendo o estado antigo.
+2) MODIFICACOES FEITAS E POSTERIORMENTE REVERTIDAS
 
-Observacao: os commits 6b67cda e f01b3b8 aparecem no historico, mas foram
-revertidos pelos commits acima. O estado atual da branch master reflete os
-reverts.
+Obs.: Estas mudancas foram implementadas no passado e depois revertidas na
+branch master, portanto nao estao ativas no sistema atual.
 
-2) COMO O SISTEMA FUNCIONA (RESUMO)
+- Painel e acessos de barbeiro (permissoes e rotas dedicadas).
+- Sistema de barbeiros e avaliacoes (cadastro, selecao e avaliacao).
+- Ajustes de seguranca relacionados ao fluxo acima.
+
+3) COMO O SISTEMA FUNCIONA (RESUMO)
 
 Frontend (React):
-- Interface de login, cadastro, perfil e agendamentos.
-- Componentes principais ficam em client/src/components.
-- As rotas do frontend apontam para a API do backend.
+- Telas de login, cadastro, perfil e agendamentos.
+- Componentes ficam em client/src/components.
+- O frontend consome a API do backend.
 
 Backend (Node/Express):
 - API REST em server/ com rotas de autenticacao e agendamentos.
@@ -35,14 +38,8 @@ Fluxo basico:
 1. Usuario se cadastra e faz login.
 2. O backend valida credenciais e retorna um token.
 3. O frontend usa esse token para acessar rotas protegidas.
-4. Usuario pode criar e visualizar agendamentos vinculados a sua conta.
+4. Usuario cria e visualiza agendamentos vinculados a sua conta.
 
 Configuracao:
-- Variaveis de ambiente devem estar em arquivos .env (nao versionados).
+- Variaveis de ambiente ficam em arquivos .env (nao versionados).
 - E necessario configurar a conexao com o MongoDB no backend.
-
-3) OBSERVACOES
-- Arquivos locais e testes foram removidos do controle de versao para manter o
-  repositorio limpo e garantir apenas o necessario para rodar o projeto.
-- Caso queira reintroduzir alguma funcionalidade revertida, ela pode ser
-  restaurada via novos commits ou rebase controlado.
