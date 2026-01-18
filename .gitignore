@@ -1,0 +1,33 @@
+node_modules/
+**/node_modules/
+.env
+**/.env
+*.log
+*.tmp
+*.cache
+coverage/
+dist/
+build/
+.vscode/
+.idea/
+
+# Documentos e relatórios locais
+CONFIGURACAO.md
+CORRECOES_APLICADAS.md
+DIAGNOSTICO_CONEXAO.md
+INSTRUCOES_INSTALACAO.md
+RELATORIO_TESTES.md
+RESUMO_FINAL.md
+SOLUCAO_LOGIN.md
+TESTE_CONEXAO_BANCO.md
+VERIFICACAO_ACESSO_ADMIN.md
+VERIFICACAO_BANCO.md
+server/ATUALIZAR_MONGO_URI.md
+
+# Scripts de teste e manutenção local
+client/src/test-*.js
+client/start.bat
+server/test-*.js
+server/check-*.js
+server/create-*.js
+server/reset-password.js
