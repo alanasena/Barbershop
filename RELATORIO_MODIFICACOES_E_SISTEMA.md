@@ -14,6 +14,13 @@ funcionamento atual.
   - Normalizacao de formato/linha em alguns arquivos do backend (sem alterar
     regras de negocio).
 
+Onde foram feitas as modificacoes (arquivos):
+- `.gitignore` (novo): regras para ignorar arquivos locais/temporarios.
+- `server/config/db.js`: ajustes de formatacao (sem mudanca de logica).
+- `server/models/Appointment.js`: ajustes de formatacao (sem mudanca de logica).
+- `server/routes/auth.js`: ajustes de formatacao (sem mudanca de logica).
+- `server/server.js`: ajustes de formatacao (sem mudanca de logica).
+
 2) MODIFICACOES FEITAS E POSTERIORMENTE REVERTIDAS
 
 Obs.: Estas mudancas foram implementadas no passado e depois revertidas na
@@ -30,9 +37,19 @@ Frontend (React):
 - Componentes ficam em client/src/components.
 - O frontend consome a API do backend.
 
+Onde fica no codigo (frontend):
+- Rotas principais em `client/src/App.js`.
+- Telas principais em `client/src/components/`.
+
 Backend (Node/Express):
 - API REST em server/ com rotas de autenticacao e agendamentos.
 - Persistencia em MongoDB via Mongoose.
+
+Onde fica no codigo (backend):
+- Servidor e middlewares em `server/server.js`.
+- Conexao com o banco em `server/config/db.js`.
+- Rotas em `server/routes/`.
+- Modelos (schemas) em `server/models/`.
 
 Fluxo basico:
 1. Usuario se cadastra e faz login.
