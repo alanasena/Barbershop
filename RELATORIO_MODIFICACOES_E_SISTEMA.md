@@ -60,3 +60,10 @@ Fluxo basico:
 Configuracao:
 - Variaveis de ambiente ficam em arquivos .env (nao versionados).
 - E necessario configurar a conexao com o MongoDB no backend.
+
+4) COMO VER O FEEDBACK (AVALIACOES)
+
+No estado atual da branch master, o modulo de barbeiros/avaliacoes foi
+revertido. Portanto, nao existe tela ou rota ativa para visualizar feedback.
+Para voltar a ver feedbacks, e necessario reintroduzir o modulo de avaliacoes
+em novos commits (modelos, rotas e UI).
