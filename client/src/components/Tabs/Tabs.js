@@ -6,11 +6,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+import StarIcon from '@material-ui/icons/Star';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import UserList from '../Admin/UsersList/UsersList'
 import AppointmentsList from '../Admin/AppointmentsList/AppointmentsList'
+import FeedbacksList from '../Admin/FeedbacksList/FeedbacksList'
 import './Tabs.css'
 
 function TabPanel(props) {
@@ -81,6 +83,7 @@ export default function ScrollableTabsButtonPrevent() {
         >
           <Tab icon={<PhoneIcon />} aria-label="phone" {...a11yProps(0)} />
           <Tab icon={<PersonPinIcon />} aria-label="favorite" {...a11yProps(1)} />
+          <Tab icon={<StarIcon />} aria-label="feedbacks" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel  value={value} index={0}>
@@ -88,6 +91,9 @@ export default function ScrollableTabsButtonPrevent() {
       </TabPanel>
       <TabPanel className='tab-panel' value={value} index={1}>
         <UserList/>
+      </TabPanel>
+      <TabPanel className='tab-panel' value={value} index={2}>
+        <FeedbacksList/>
       </TabPanel>
     </div>
   );

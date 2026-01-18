@@ -1,0 +1,41 @@
+.feedbacks-list {
+    padding: 10px;
+}
+
+.feedbacks-list h1 {
+    margin-bottom: 10px;
+}
+
+.feedbacks-loading,
+.feedbacks-empty,
+.feedbacks-error {
+    padding: 10px 0;
+}
+
+.feedbacks-error {
+    color: #d9534f;
+}
+
+.feedbacks-comment {
+    max-width: 320px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.feedbacks-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.feedbacks-list th,
+.feedbacks-list td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.feedbacks-list .table-header {
+    background-color: #4fbae4;
+    color: #fff;
+}

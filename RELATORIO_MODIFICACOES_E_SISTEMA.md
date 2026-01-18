@@ -14,12 +14,21 @@ funcionamento atual.
   - Normalizacao de formato/linha em alguns arquivos do backend (sem alterar
     regras de negocio).
 
+- Feedbacks (avaliacoes) reintroduzidos:
+  - Criado modelo e rotas para registrar e listar avaliacoes.
+  - Adicionada tela de visualizacao no painel de controle (admin).
+
 Onde foram feitas as modificacoes (arquivos):
 - `.gitignore` (novo): regras para ignorar arquivos locais/temporarios.
 - `server/config/db.js`: ajustes de formatacao (sem mudanca de logica).
 - `server/models/Appointment.js`: ajustes de formatacao (sem mudanca de logica).
 - `server/routes/auth.js`: ajustes de formatacao (sem mudanca de logica).
 - `server/server.js`: ajustes de formatacao (sem mudanca de logica).
+- `server/models/Rating.js`: modelo de avaliacao (feedback).
+- `server/routes/rating.js`: rotas para criar e listar feedbacks.
+- `client/src/components/Admin/FeedbacksList/`:
+  - `FeedbacksList.js` e `FeedbacksList.css` (tela de feedbacks).
+- `client/src/components/Tabs/Tabs.js`: nova aba "Feedbacks" no painel.
 
 2) MODIFICACOES FEITAS E POSTERIORMENTE REVERTIDAS
 
@@ -63,7 +72,11 @@ Configuracao:
 
 4) COMO VER O FEEDBACK (AVALIACOES)
 
-No estado atual da branch master, o modulo de barbeiros/avaliacoes foi
-revertido. Portanto, nao existe tela ou rota ativa para visualizar feedback.
-Para voltar a ver feedbacks, e necessario reintroduzir o modulo de avaliacoes
-em novos commits (modelos, rotas e UI).
+Como acessar na interface:
+1. Fazer login como admin.
+2. Acessar o Painel de Controle.
+3. Abrir a aba "Feedbacks" para ver a lista de avaliacoes.
+
+Rotas e dados:
+- Listagem: `GET /ratings` (retorna usuario, agendamento, nota e comentario).
+- Criacao: `POST /rating` com `appointmentId`, `userId`, `rating`, `comment`.
