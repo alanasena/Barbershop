@@ -23,7 +23,11 @@ const SideNav = () => {
         if(getCookie('name'))
             setName(getCookie('name'))
 
-        if(getCookie('admin') === 'true' || getCookie('barber') === 'true'){
+        const isAdmin = getCookie('admin') === 'true'
+        const isBarberCookie = getCookie('barber') === 'true'
+        const userEmail = getCookie('email') || ''
+        const isBarberEmail = userEmail.toLowerCase().includes('@barbearia.com')
+        if(isAdmin || isBarberCookie || isBarberEmail){
             controlPanel.style.display = 'block'
             userProfile.style.display = 'block'
 
