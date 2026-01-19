@@ -1,5 +1,6 @@
 .feedbacks-list {
     padding: 10px;
+    color: #333;
 }
 
 .feedbacks-list h1 {
@@ -7,8 +8,8 @@
 }
 
 .feedbacks-create {
-    background: #fff;
-    border: 1px solid #e0e0e0;
+    background: #f8f9fb;
+    border: 1px solid #e1e5ea;
     border-radius: 6px;
     padding: 12px;
     margin-bottom: 20px;
@@ -25,18 +26,25 @@
     gap: 8px;
 }
 
+.feedbacks-form label {
+    font-weight: 600;
+    color: #2d3a45;
+}
+
 .feedbacks-form input,
 .feedbacks-form select,
 .feedbacks-form textarea {
     padding: 8px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #cfd6de;
     border-radius: 4px;
     font-size: 14px;
+    background-color: #fff;
+    color: #2b2b2b;
 }
 
 .feedbacks-form button {
     padding: 10px;
-    background-color: #4fbae4;
+    background-color: #3aa7d0;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -45,7 +53,7 @@
 }
 
 .feedbacks-form button:disabled {
-    background-color: #9ccfe3;
+    background-color: #a9cfe0;
     cursor: not-allowed;
 }
 
@@ -69,16 +77,66 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    table-layout: fixed;
+}
+
+.feedbacks-list .feedbacks-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e1e5ea;
+    border-radius: 6px;
+    background: #fff;
 }
 
 .feedbacks-list th,
 .feedbacks-list td {
-    border: 1px solid #ddd;
+    border: 1px solid #e1e5ea;
     padding: 8px 10px;
     text-align: left;
+    vertical-align: top;
+    word-break: break-word;
 }
 
 .feedbacks-list .table-header {
-    background-color: #4fbae4;
+    background-color: #2f3b46;
     color: #fff;
+}
+
+.feedbacks-list tbody tr:nth-child(even) {
+    background-color: #f6f8fa;
+}
+
+.feedbacks-list th:nth-child(1),
+.feedbacks-list td:nth-child(1) {
+    width: 160px;
+}
+
+.feedbacks-list th:nth-child(2),
+.feedbacks-list td:nth-child(2) {
+    width: 180px;
+}
+
+.feedbacks-list th:nth-child(4),
+.feedbacks-list td:nth-child(4) {
+    width: 80px;
+}
+
+.feedbacks-list th:nth-child(5),
+.feedbacks-list td:nth-child(5) {
+    width: 60px;
+}
+
+.feedbacks-list th:nth-child(6),
+.feedbacks-list td:nth-child(6) {
+    width: 90px;
+}
+
+.feedbacks-list th:nth-child(7),
+.feedbacks-list td:nth-child(7) {
+    width: 320px;
+}
+
+.feedbacks-list th:nth-child(8),
+.feedbacks-list td:nth-child(8) {
+    width: 150px;
 }

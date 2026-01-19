@@ -35,6 +35,11 @@ const ratingSchema = new mongoose.Schema({
         type: String,
         trim: true,
         maxlength: 120
+    },
+    barberName: {
+        type: String,
+        trim: true,
+        maxlength: 120
     }
 }, {
     timestamps: true

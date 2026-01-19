@@ -45,7 +45,7 @@ router.post('/rating', async (req, res) => {
 
 router.post('/rating/manual', async (req, res) => {
     try {
-        const { rating, comment, clientName, clientEmail } = req.body
+        const { rating, comment, clientName, clientEmail, barberName } = req.body
 
         if (!rating) {
             return res.status(400).send({ error: 'Nota e obrigatoria' })
@@ -56,7 +56,8 @@ router.post('/rating/manual', async (req, res) => {
             comment: comment || '',
             isManual: true,
             clientName: clientName || 'Cliente',
-            clientEmail: clientEmail || ''
+            clientEmail: clientEmail || '',
+            barberName: barberName || 'Barbeiro'
         })
 
         await manualRating.save()
@@ -87,6 +88,7 @@ router.get('/ratings', async (req, res) => {
             isManual: item.isManual,
             clientName: item.clientName || null,
             clientEmail: item.clientEmail || null,
+            barberName: item.barberName || null,
             user: item.userId ? {
                 _id: item.userId._id,
                 name: item.userId.name,

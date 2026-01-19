@@ -11,6 +11,7 @@ const FeedbacksList = () => {
     const [newComment, setNewComment] = useState('')
     const [newClientName, setNewClientName] = useState('')
     const [newClientEmail, setNewClientEmail] = useState('')
+    const [newBarberName, setNewBarberName] = useState('')
     const [creating, setCreating] = useState(false)
 
     useEffect(() => {
@@ -45,13 +46,15 @@ const FeedbacksList = () => {
                 rating: Number(newRating),
                 comment: newComment,
                 clientName: newClientName,
-                clientEmail: newClientEmail
+                clientEmail: newClientEmail,
+                barberName: newBarberName
             }
             const response = await axios.post(`${API_URL}/rating/manual`, payload)
             setFeedbacks((prev) => [response.data, ...prev])
             setNewComment('')
             setNewClientName('')
             setNewClientEmail('')
+            setNewBarberName('')
             setError('')
         } catch (err) {
             console.error('Erro ao criar feedback manual:', err)
@@ -92,6 +95,13 @@ const FeedbacksList = () => {
                         onChange={(e) => setNewClientEmail(e.target.value)}
                         placeholder='Ex: joao@email.com'
                     />
+                    <label>Nome do barbeiro</label>
+                    <input
+                        type='text'
+                        value={newBarberName}
+                        onChange={(e) => setNewBarberName(e.target.value)}
+                        placeholder='Ex: Carlos'
+                    />
                     <label>Nota (1 a 5)</label>
                     <select value={newRating} onChange={(e) => setNewRating(e.target.value)}>
                         <option value='1'>1</option>
@@ -118,34 +128,38 @@ const FeedbacksList = () => {
             ) : feedbacks.length === 0 ? (
                 <p className='feedbacks-empty'>Nenhum feedback encontrado.</p>
             ) : (
-                <table>
-                    <thead>
-                        <tr className='table-header'>
-                            <th>Usuario</th>
-                            <th>Email</th>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Nota</th>
-                            <th>Comentario</th>
-                            <th>Criado em</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {feedbacks.map((item) => (
-                            <tr key={item._id}>
-                                <td>{item.user?.name || item.clientName || item.appointment?.name || 'N/A'}</td>
-                                <td>{item.user?.email || item.clientEmail || 'N/A'}</td>
-                                <td>{item.appointment?.date || (item.isManual ? 'Manual' : 'N/A')}</td>
-                                <td>{item.appointment?.time || (item.isManual ? 'Manual' : 'N/A')}</td>
-                                <td>{item.rating ?? 'N/A'}</td>
-                                <td className='feedbacks-comment'>
-                                    {item.comment ? item.comment : 'Sem comentario'}
-                                </td>
-                                <td>{formatDateTime(item.createdAt)}</td>
+                <div className='feedbacks-table-wrapper'>
+                    <table>
+                        <thead>
+                            <tr className='table-header'>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Barbeiro</th>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Nota</th>
+                                <th>Comentario</th>
+                                <th>Criado em</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {feedbacks.map((item) => (
+                                <tr key={item._id}>
+                                    <td>{item.user?.name || item.clientName || item.appointment?.name || 'N/A'}</td>
+                                    <td>{item.user?.email || item.clientEmail || 'N/A'}</td>
+                                    <td>{item.barberName || 'N/A'}</td>
+                                    <td>{item.appointment?.date || (item.isManual ? 'Manual' : 'N/A')}</td>
+                                    <td>{item.appointment?.time || (item.isManual ? 'Manual' : 'N/A')}</td>
+                                    <td>{item.rating ?? 'N/A'}</td>
+                                    <td className='feedbacks-comment'>
+                                        {item.comment ? item.comment : 'Sem comentario'}
+                                    </td>
+                                    <td>{formatDateTime(item.createdAt)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     )
