@@ -9,7 +9,7 @@ export const AdminRoute = ({component: Components, ...rest}) => {
     console.log('Admin route rendred')
     return (
         <Route {...rest} render={props => {
-            if(getCookie('admin') === 'true') {
+            if(getCookie('admin') === 'true' || getCookie('barber') === 'true') {
               return <Components {...props} />;
             } else {
                 console.log('not admin')

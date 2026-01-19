@@ -4,6 +4,7 @@ import Row from './Row/Row'
 import axios from 'axios'
 import {getSundays, makeDate} from '../../../time'
 import {Link} from 'react-router-dom'
+import { getCookie } from '../../../cookies'
 import API_URL from '../../../config/api'
 
 const AppointmentsList = () => {
@@ -30,6 +31,16 @@ const AppointmentsList = () => {
                     if( obj.timeInMS > sundays.sunday && obj.timeInMS < sundays.nextSunday)return true
                     else return false  
                 })
+                const isBarber = getCookie('barber') === 'true'
+                if (isBarber) {
+                    const barberEmail = getCookie('barberEmail')
+                    const barberName = getCookie('barberName')
+                    newAppointments = newAppointments.filter((appointment) => {
+                        if (barberEmail && appointment.barberEmail === barberEmail) return true
+                        if (barberName && appointment.barberName === barberName) return true
+                        return false
+                    })
+                }
                 console.log('newAppointments: ',newAppointments)
                 setAppointments(newAppointments)
             }

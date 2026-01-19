@@ -18,6 +18,9 @@ const Appointment = (props) => {
     const [dayOfWeek, setDayOfWeek] = useState('')
     const [time, setTime] = useState(0)
     const [error, setError] = useState('')
+    const [barbers, setBarbers] = useState([])
+    const [selectedBarberEmail, setSelectedBarberEmail] = useState('')
+    const [selectedBarberName, setSelectedBarberName] = useState('')
 
     const options = [
         { value:'10:00',  label:'10:00' },
@@ -55,6 +58,23 @@ const Appointment = (props) => {
             changeAppointment.style.display = 'none'
             phoneInput.style.display = 'block'
         }
+        const fetchBarbers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/barbers`)
+                const payload = response.data && response.data.value ? response.data.value : response.data
+                const list = Array.isArray(payload) ? payload : []
+                setBarbers(list)
+                if (list.length) {
+                    setSelectedBarberEmail(list[0].email)
+                    setSelectedBarberName(list[0].name)
+                }
+            } catch (err) {
+                console.error('Erro ao buscar barbeiros:', err)
+                setBarbers([])
+            }
+        }
+
+        fetchBarbers()
     },[])
 
     if(phone.length >= 6 && userTime !== '' && userDate!== '')  {
@@ -73,6 +93,8 @@ const Appointment = (props) => {
         appointmentData.time = userTime
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
+        appointmentData.barberName = selectedBarberName
+        appointmentData.barberEmail = selectedBarberEmail
 
         let response = await axios.post(`${API_URL}/changeappointment`, appointmentData)
         let { error } = response.data
@@ -100,6 +122,8 @@ const Appointment = (props) => {
         appointmentData.phone = phone
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
+        appointmentData.barberName = selectedBarberName
+        appointmentData.barberEmail = selectedBarberEmail
        
         let response = await axios.post(`${API_URL}/appointment`, appointmentData)
         let { error } = response.data
@@ -136,6 +160,13 @@ const Appointment = (props) => {
         setStartDate(date)
         setDayOfWeek(date.getDay())
       };
+
+    const handleBarberChange = (event) => {
+        const value = event.target.value
+        const barber = barbers.find((item) => item.email === value)
+        setSelectedBarberEmail(value)
+        setSelectedBarberName(barber ? barber.name : '')
+    }
     
     return (
         <div>
@@ -168,6 +199,25 @@ const Appointment = (props) => {
                             className='time-picker' 
                         />
                     </div>
+                    <div className='appointment-inner-container'>
+                        <p>Selecione o barbeiro:<span className='red-astrix'>*</span></p>
+                        <select
+                            className='time-picker'
+                            value={selectedBarberEmail}
+                            onChange={handleBarberChange}
+                            disabled={!barbers.length}
+                        >
+                            {barbers.length === 0 ? (
+                                <option value=''>Sem barbeiros cadastrados</option>
+                            ) : (
+                                barbers.map((barber) => (
+                                    <option key={barber.id} value={barber.email}>
+                                        {barber.name} ({barber.email})
+                                    </option>
+                                ))
+                            )}
+                        </select>
+                    </div>
 
                     <div id='appo-phone' className='appointment-inner-container'>
                         <p>Seu telefone: <span className='red-astrix'>*</span></p>
@@ -185,6 +235,7 @@ const Appointment = (props) => {
                         <h3>Agendamento para:</h3>
                         <p>Data:  <span>{userDate}</span></p>
                         <p>Horario: <span>{userTime}</span></p>
+                        <p>Barbeiro: <span>{selectedBarberName || 'Nao definido'}</span></p>
                         <p>Telefone: <span>{phone}</span></p>
                     </div>
                 </div>

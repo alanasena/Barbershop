@@ -23,9 +23,9 @@ const SideNav = () => {
         if(getCookie('name'))
             setName(getCookie('name'))
 
-        if(getCookie('admin') === 'true'){
+        if(getCookie('admin') === 'true' || getCookie('barber') === 'true'){
             controlPanel.style.display = 'block'
-            userProfile.style.display = 'none'
+            userProfile.style.display = 'block'
 
         }
         else{
@@ -51,6 +51,10 @@ const SideNav = () => {
         deleteCookie('id')
         deleteCookie('status')
         deleteCookie('admin')
+        deleteCookie('barber')
+        deleteCookie('barberName')
+        deleteCookie('barberEmail')
+        deleteCookie('email')
         window.location.replace('/')
     }
 

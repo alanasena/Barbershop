@@ -13,6 +13,7 @@ const FeedbacksList = () => {
     const [newClientName, setNewClientName] = useState('')
     const [newClientEmail, setNewClientEmail] = useState('')
     const [newBarberName, setNewBarberName] = useState('')
+    const [newBarberEmail, setNewBarberEmail] = useState('')
     const [creating, setCreating] = useState(false)
 
     useEffect(() => {
@@ -45,6 +46,7 @@ const FeedbacksList = () => {
                 setBarbers(list)
                 if (list.length && !newBarberName) {
                     setNewBarberName(list[0].name)
+                    setNewBarberEmail(list[0].email)
                 }
             } catch (err) {
                 console.error('Erro ao buscar barbeiros:', err)
@@ -65,7 +67,8 @@ const FeedbacksList = () => {
                 comment: newComment,
                 clientName: newClientName,
                 clientEmail: newClientEmail,
-                barberName: newBarberName
+                barberName: newBarberName,
+                barberEmail: newBarberEmail
             }
             const response = await axios.post(`${API_URL}/rating/manual`, payload)
             setFeedbacks((prev) => [response.data, ...prev])
@@ -73,6 +76,7 @@ const FeedbacksList = () => {
             setNewClientName('')
             setNewClientEmail('')
             setNewBarberName('')
+            setNewBarberEmail('')
             setError('')
         } catch (err) {
             console.error('Erro ao criar feedback manual:', err)
@@ -115,15 +119,20 @@ const FeedbacksList = () => {
                     />
                     <label>Nome do barbeiro</label>
                     <select
-                        value={newBarberName}
-                        onChange={(e) => setNewBarberName(e.target.value)}
+                        value={newBarberEmail}
+                        onChange={(e) => {
+                            const value = e.target.value
+                            const barber = barbers.find((item) => item.email === value)
+                            setNewBarberEmail(value)
+                            setNewBarberName(barber ? barber.name : '')
+                        }}
                         disabled={!barbers.length}
                     >
                         {barbers.length === 0 ? (
                             <option value=''>Sem barbeiros cadastrados</option>
                         ) : (
                             barbers.map((barber) => (
-                                <option key={barber.id} value={barber.name}>
+                                <option key={barber.id} value={barber.email}>
                                     {barber.name} ({barber.email})
                                 </option>
                             ))
@@ -174,7 +183,7 @@ const FeedbacksList = () => {
                                 <tr key={item._id}>
                                     <td>{item.user?.name || item.clientName || item.appointment?.name || 'N/A'}</td>
                                     <td>{item.user?.email || item.clientEmail || 'N/A'}</td>
-                                    <td>{item.barberName || 'Nao informado'}</td>
+                                    <td>{item.barberName || item.barberEmail || 'Nao informado'}</td>
                                     <td>{item.appointment?.date || (item.isManual ? 'Manual' : 'N/A')}</td>
                                     <td>{item.appointment?.time || (item.isManual ? 'Manual' : 'N/A')}</td>
                                     <td>{item.rating ?? 'N/A'}</td>

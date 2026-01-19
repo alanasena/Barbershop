@@ -16,7 +16,7 @@ router.post('/appointment', async (req, res)=>{
     const user = await Users.findOne({_id:req.body.userID})
     if(!user) return res.send({error:'user dosent exists'})
 
-    let {userID, key, name, date, time, phone, day, timeInMS} = req.body
+  let {userID, key, name, date, time, phone, day, timeInMS, barberName, barberEmail} = req.body
 
     const newAppointment = new NewAppointment({   
         userID,
@@ -26,7 +26,9 @@ router.post('/appointment', async (req, res)=>{
         time,
         phone,
         day,
-        timeInMS
+      timeInMS,
+      barberName,
+      barberEmail
       })
       newAppointment.save()
 

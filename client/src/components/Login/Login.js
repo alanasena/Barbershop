@@ -45,13 +45,36 @@ const Login = (props) => {
             setCookie('status', status ,2)
             setCookie('name', name ,2)
             setCookie('admin', admin ,2)
+            const isBarber = email.toLowerCase().includes('@barbearia.com')
+            setCookie('barber', isBarber ? 'true' : 'false', 2)
+            setCookie('email', email ,2)
             setCookie('phone', phone ,2)
 
-            if(admin)
+            if(admin || isBarber)
                 props.history.push({ pathname: '/admin' });
             else
                 props.history.push({ pathname: '/appointment' });
             console.log('login succeed')
+
+            if (isBarber) {
+                try {
+                    const response = await axios.get(`${API_URL}/barbers`)
+                    const payload = response.data && response.data.value ? response.data.value : response.data
+                    const list = Array.isArray(payload) ? payload : []
+                    const barber = list.find((item) => item.email === email)
+                    if (barber) {
+                        setCookie('barberName', barber.name, 2)
+                        setCookie('barberEmail', barber.email, 2)
+                    } else {
+                        setCookie('barberName', name, 2)
+                        setCookie('barberEmail', email, 2)
+                    }
+                } catch (err) {
+                    console.error('Erro ao buscar barbeiros:', err)
+                    setCookie('barberName', name, 2)
+                    setCookie('barberEmail', email, 2)
+                }
+            }
         }
     }
 

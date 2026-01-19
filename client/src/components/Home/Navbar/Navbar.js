@@ -21,9 +21,9 @@ const Navbar = () => {
         console.log(day)
         dayOfWeek(day)
         setName(getCookie('name'))
-        if(getCookie('admin') === 'true'){
+        if(getCookie('admin') === 'true' || getCookie('barber') === 'true'){
             controlPanel.style.display = 'block'
-            userProfile.style.display = 'none'
+            userProfile.style.display = 'block'
 
         }
         else{
@@ -48,6 +48,10 @@ const Navbar = () => {
         deleteCookie('id')
         deleteCookie('status')
         deleteCookie('admin')
+        deleteCookie('barber')
+        deleteCookie('barberName')
+        deleteCookie('barberEmail')
+        deleteCookie('email')
         window.location.replace('/')
     }
 

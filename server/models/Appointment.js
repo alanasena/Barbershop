@@ -28,6 +28,15 @@ const newAppointment = new mongoose.Schema({
     },
     timeInMS:{
         type:Number
+    },
+    barberName: {
+        type: String,
+        trim: true
+    },
+    barberEmail: {
+        type: String,
+        trim: true,
+        lowercase: true
     }
  })
 

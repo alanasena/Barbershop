@@ -40,6 +40,12 @@ const ratingSchema = new mongoose.Schema({
         type: String,
         trim: true,
         maxlength: 120
+    },
+    barberEmail: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        maxlength: 120
     }
 }, {
     timestamps: true
