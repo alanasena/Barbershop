@@ -62,7 +62,7 @@ const SideNav = () => {
 
     return (
         <div className='side-navbar'>
-            <h1 className=''>Hello, {name} !</h1>
+            <h1 className=''>Ola, {name}!</h1>
             <div className='side-navbar-info'>
                 <div className='side-nav-info'>
                     <i className="fa fa-phone" aria-hidden="true"></i>
@@ -76,39 +76,39 @@ const SideNav = () => {
             <ul className='side-navbar-ul'>
                     <li className=''>
                         <i className="fa fa-home" aria-hidden="true"></i>
-                        <a href="./#hero-navigate" className='links'>Home</a>
+                        <a href="./#hero-navigate" className='links'>Inicio</a>
                     </li>
                     <li className=''>
                         <i className="fa fa-camera" aria-hidden="true"></i>
-                        <a href="./#what-we-do" className='links'>Service</a> 
+                        <a href="./#what-we-do" className='links'>Servicos</a> 
                     </li>
                     <li className=''>
                         <i className="fa fa-money" aria-hidden="true"></i>
-                        <a href="./#hours-navigate" className='links'> Hours</a>
+                        <a href="./#hours-navigate" className='links'>Horarios</a>
                     </li>
                     <li id='control-panel' className='nav-items'>
                         <Link className='links side-cp' to='/admin'>
-                            Control Panel
+                            Painel de Controle
                         </Link>
                     </li>
                     <li id='user-profile' className='nav-items'>
                         <Link className='links side-up' to='/profile'>
-                            User Profile
+                            Perfil do Usuario
                         </Link>
                     </li>
                 </ul>
                 <div className='side-logout'>       
-                    <button className='side-btn' onClick={logout}>Logout</button>
+                    <button className='side-btn' onClick={logout}>Sair</button>
                 </div>
                 <div className='side-log-reg'>
                     <Link className='side-log-reg-link' to='/login'>
-                        Login
+                        Entrar
                     </Link>
                 
                     <span className='side-separator'></span>
 
                     <Link className='side-log-reg-link' to='/register'>
-                        Register
+                        Registrar
                     </Link>
                 </div>
         </div>

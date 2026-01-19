@@ -66,7 +66,7 @@ const Login = (props) => {
             <div className='login-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <h1>Login</h1>
+                        <h1>Entrar</h1>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
@@ -80,20 +80,20 @@ const Login = (props) => {
                             name='email'
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Senha:</p>
                         <input type="password"
-                            placeholder='Password...'
+                            placeholder='Senha...'
                             className='form-container-input'
                             name='password'
                             onChange={(e) => setPass(e.target.value)}
                             onKeyPress={(e) => loginByPress(e)}
                         />
                         <div className='reg-btn-div'>
-                            <button onClick={handleLogin} className='reg-submit'>Login</button>
+                            <button onClick={handleLogin} className='reg-submit'>Entrar</button>
                         </div> 
                         <div className='new-account-login'>
                             <Link to='/register' className='new-account-link'>
-                                Do you have account?
+                                Nao tem conta?
                             </Link> 
                         </div>
                         <div className='login-div'>

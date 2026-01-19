@@ -18,30 +18,30 @@ const Services = () => {
 
                 <div className='services-info'>
                     <img src={logo} alt=''></img>
-                    <h1>What We Do?</h1>
-                    <p className='mr-bottom services-para'>Duis aute irure dolor in reprehenderit volupte velit esse cillum dolore eu fugiat</p>
-                    <p className='mr-bottom services-para'>pariatursint occaecat cupidatat non proident culpa.</p>
+                    <h1>O que fazemos</h1>
+                    <p className='mr-bottom services-para'>Oferecemos servicos completos de barbearia com qualidade e atencao.</p>
+                    <p className='mr-bottom services-para'>Agende seu horario e venha cuidar do visual.</p>
                 </div>
 
                 <div className='services-grid'>
                     <div className='services-box'>
                         <img src={hair_cut} alt=''></img>
-                        <h2>Haircut Styles</h2>
-                        <p className='mr-bottom services-para'>Duis aute irure dolor in reprehenderit in volupte</p>
-                        <p className='mr-bottom services-para'>velit esse cillum dolore fugiat nulla.</p>
+                        <h2>Cortes de cabelo</h2>
+                        <p className='mr-bottom services-para'>Cortes classicos e modernos para todos os estilos.</p>
+                        <p className='mr-bottom services-para'>Atendimento personalizado.</p>
                     </div>
                     <div className='services-box'>
                         <img src={beardShave} alt=''></img>
-                        <h2>Beard Trim</h2>
-                        <p className='mr-bottom services-para'>Duis aute irure dolor in reprehenderit in volupte</p>
-                        <p className='mr-bottom services-para'>velit esse cillum dolore fugiat nulla.</p>
+                        <h2>Barba</h2>
+                        <p className='mr-bottom services-para'>Acabamento e desenho de barba com precisao.</p>
+                        <p className='mr-bottom services-para'>Produtos de qualidade.</p>
                     </div>
                   
                     <div className='services-box'>
                         <img src={pic3} alt=''></img>
-                        <h2>Hot Shave</h2>
-                        <p className='mr-bottom services-para'>Duis aute irure dolor in reprehenderit in volupte</p>
-                        <p className='mr-bottom services-para'>velit esse cillum dolore fugiat nulla.</p>
+                        <h2>Barbear completo</h2>
+                        <p className='mr-bottom services-para'>Experiencia tradicional com toalha quente.</p>
+                        <p className='mr-bottom services-para'>Conforto e cuidado.</p>
                     </div>
                 </div>
             </div>

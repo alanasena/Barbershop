@@ -40,30 +40,30 @@ const AppointmentsList = () => {
     return (
         <div className='appointments-list'>
             <div>
-                <h1>Control Panel</h1>
+                <h1>Painel de Controle</h1>
                 <div className='admin-profile-links-container'>
                     <Link to='/' className='admin-profile-link'>
-                        Home 
+                        Inicio 
                     </Link>
                     /
                     <Link to='/profile' className='admin-profile-link'>
-                        Profile 
+                        Perfil 
                     </Link>
                 </div>
             </div>
             
-            <h3>The appointments are between {`${thisSunday} and ${lastSunday}`}</h3>
+            <h3>Os agendamentos estao entre {`${thisSunday} e ${lastSunday}`}</h3>
         
             <table>
                 <thead>
                     <tr className='table-header'>
                         <td id='td-white'></td>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
+                        <th>Domingo</th>
+                        <th>Segunda</th>
+                        <th>Terca</th>
+                        <th>Quarta</th>
+                        <th>Quinta</th>
+                        <th>Sexta</th>
                     </tr>
                 </thead>
                 <tbody>

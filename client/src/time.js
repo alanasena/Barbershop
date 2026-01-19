@@ -31,43 +31,43 @@ export const fullTime = (num) => {
     
     switch(num){
         case 0:
-            obj.day = 'Sun'
-            obj.workTime = '10.00 am to 15.00 am'
+            obj.day = 'Dom'
+            obj.workTime = '10:00 as 15:00'
             break
 
         case 1:
-            obj.day = 'Mon'
-            obj.workTime = '10.00 am to 15.30 am'
+            obj.day = 'Seg'
+            obj.workTime = '10:00 as 15:30'
             break
 
         case 2:
-            obj.day = 'Tue'
-            obj.workTime = '10.00 am to 14.30 am'
+            obj.day = 'Ter'
+            obj.workTime = '10:00 as 14:30'
             break
 
         case 3:
-            obj.day = 'Wed'
-            obj.workTime = '10.00 am to 14.30 am'
+            obj.day = 'Qua'
+            obj.workTime = '10:00 as 14:30'
             break
 
         case 4:
-            obj.day = 'Thu'
-            obj.workTime = '10.00 am to 15.00 am'
+            obj.day = 'Qui'
+            obj.workTime = '10:00 as 15:00'
             break
 
         case 5:
-            obj.day = 'Fri'
-            obj.workTime = '10.00 am to 15.30 am'
+            obj.day = 'Sex'
+            obj.workTime = '10:00 as 15:30'
             break
 
         case 6:
-            obj.day = 'Weekend'
-            obj.workTime = 'Have a great Weekend guys!'
+            obj.day = 'Fim de semana'
+            obj.workTime = 'Bom fim de semana!'
             break
 
         default:
-            obj.day = 'Default'
-            obj.workTime = '0.00 am to 0.00 am'
+            obj.day = 'Indefinido'
+            obj.workTime = '00:00 as 00:00'
             break
 
     }

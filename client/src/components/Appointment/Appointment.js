@@ -142,12 +142,12 @@ const Appointment = (props) => {
             <Navbar/>
             <div className='appointment-container'>
                 <div className='appointment-form'>
-                    <h1>Make Appointment</h1>
+                    <h1>Agendar Horario</h1>
                     <div className='appointment-inner-container'>
                         {error !== '' ?  <ErrorMsg info={error}/>
                         
                         : ''}
-                        <p>Please choose date:<span className='red-astrix'>*</span></p>
+                        <p>Selecione a data:<span className='red-astrix'>*</span></p>
                         <DatePicker
                             selected={startDate}
                             onChange={handleChange}
@@ -158,7 +158,7 @@ const Appointment = (props) => {
                         />
                     </div>
                     <div className='appointment-inner-container'>
-                        <p>Please choose time:<span className='red-astrix'>*</span></p>
+                        <p>Selecione o horario:<span className='red-astrix'>*</span></p>
                         <Select
                             value={updatedOptions.filter((option) => {
                                 return option.value === userTime
@@ -170,22 +170,22 @@ const Appointment = (props) => {
                     </div>
 
                     <div id='appo-phone' className='appointment-inner-container'>
-                        <p>Lets be in touch: <span className='red-astrix'>*</span></p>
+                        <p>Seu telefone: <span className='red-astrix'>*</span></p>
                         <input type="tel" className='phone-input' placeholder='phone...' 
                         value={phone ? phone : 'phone...'}
                         onChange={(e)=>setPhone(e.target.value)}/>
                     </div>
                     <div id='make-btn' className='appointment-inner-container'>
-                        <button onClick={makeAppointment} className='appointment-btn'>Send</button>
+                        <button onClick={makeAppointment} className='appointment-btn'>Agendar</button>
                     </div>
                     <div id='change-btn' className='appointment-inner-container'>
-                        <button onClick={changeAppointment} className='appointment-btn'>Update</button>
+                        <button onClick={changeAppointment} className='appointment-btn'>Atualizar</button>
                     </div>
                     <div className='appointment-data'>
-                        <h3>Appointment will be set for:</h3>
-                        <p>Date:  <span>{userDate}</span></p>
-                        <p>Hour: <span>{userTime}</span></p>
-                        <p>Phone: <span>{phone}</span></p>
+                        <h3>Agendamento para:</h3>
+                        <p>Data:  <span>{userDate}</span></p>
+                        <p>Horario: <span>{userTime}</span></p>
+                        <p>Telefone: <span>{phone}</span></p>
                     </div>
                 </div>
             </div> 

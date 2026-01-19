@@ -7,16 +7,16 @@ const Hero = () => {
     return (
         <div className='hero' id='hero-navigate'>
             <div className='hero-text'>
-                <h1 className='hero-h1'>We Make Amazing Haircuts</h1>
+                <h1 className='hero-h1'>Cortes incriveis para voce</h1>
                 <div className='hero-para-div'>
                     <p className='hero-para'>
-                        The Barberia opened in the fall of 1989. We specialize in
-                        cutting mens hair and shaving their faces. Let's see 
-                        all our awesome features below! Thanks for choose us!
+                        A barbearia abriu em 1989. Somos especializados em
+                        cortes masculinos e barba. Veja nossos servicos abaixo!
+                        Obrigado por escolher a gente!
                     </p>
                 </div>
                 <Link to='/appointment'>
-                    <button className='hero-btn'>Book Now</button>
+                    <button className='hero-btn'>Agendar agora</button>
                 </Link>
             </div>
         </div>

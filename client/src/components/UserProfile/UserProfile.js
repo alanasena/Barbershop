@@ -122,7 +122,7 @@ const UserProfile = (props) => {
             alert(error)
         }
         else{
-            alert('Appointment deleted')
+            alert('Agendamento cancelado')
             window.location.replace('/profile')
         }
     }
@@ -151,9 +151,9 @@ const UserProfile = (props) => {
             <Navbar/>
             <div className='user-profile-container'>
                 <div className='user-profile-left'>
-                    <h2>Welcome</h2>
+                    <h2>Bem-vindo</h2>
                     <img className='profile-img' src={profileImg} alt=""/>
-                    <h2>Good Day</h2>
+                    <h2>Bom dia</h2>
 
                     <ul>
                         <li className='profile-make-appointment'>
@@ -182,13 +182,13 @@ const UserProfile = (props) => {
            
                     <div id='user-profile-info' className='user-profile-box'>
                         <div>
-                            <h1>Profile Info</h1>
+                            <h1>Informacoes do Perfil</h1>
                             <div className='profile-underline'></div>
                         </div>
                         
                         <div className='user-profile-info-div'>
                             <div>
-                                <p>Name:</p>
+                                <p>Nome:</p>
                                 <span>{name}</span>
                             </div>
                             <div>
@@ -196,16 +196,16 @@ const UserProfile = (props) => {
                                 <span>{email}</span>
                             </div>
                             <div>
-                                <p>Phone:</p>
+                                <p>Telefone:</p>
                                 <span>{phone}</span>
                             </div>
                         </div>
                         <div className='user-profile-appointment'>
                             <div className='user-profile-appointment-flex'>
                                 <div className='user-profile-appointment-btns'>
-                                    <p>You have appointment to:</p>
-                                    <button onClick={changeAppointment} id='profile-btn-change'>Change</button>
-                                    <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancel</button>
+                                    <p>Voce tem agendamento para:</p>
+                                    <button onClick={changeAppointment} id='profile-btn-change'>Alterar</button>
+                                    <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancelar</button>
                                 </div>
                                 <div className='user-profile-appointment-time'>
                                     <p>{day}</p>
@@ -220,12 +220,12 @@ const UserProfile = (props) => {
                     <div id='user-profile-updateinfo' className='user-profile-box'>
 
                         <div className='profile-mr-bottom'>
-                            <h1>Update Info</h1>
+                            <h1>Atualizar Informacoes</h1>
                             <div className='profile-underline'></div>
                         </div>
                         
 
-                        <p>Name:</p>
+                        <p>Nome:</p>
                         <input type="text" placeholder='name...'
                         onChange={(e) => setUpdatedName(e.target.value)}
                         />
@@ -234,26 +234,25 @@ const UserProfile = (props) => {
                         onChange={(e) => setUpdatedEmail(e.target.value)}
 
                         />
-                        <p>Phone:</p>
+                        <p>Telefone:</p>
                         <input type="text" placeholder='phone...'
                         onChange={(e) => setUpdatedPhone(e.target.value)}
                         />
                         <br/>
-                        <button onClick={updateProfile} className='profile-update-btn'>update</button>
+                        <button onClick={updateProfile} className='profile-update-btn'>atualizar</button>
 
                     </div>
 
                     <div id='user-profile-delete-acc' className='user-profile-box'>
                         <div className='profile-mr-bottom'>
-                            <h1>Delete Account</h1>
+                            <h1>Excluir Conta</h1>
                             <div className='profile-underline'></div>
                         </div>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            Est aliquid voluptates quos sit ea omnis maxime
-                            perspiciatis vitae, provident
+                            Excluir sua conta removera seus dados e agendamentos.
+                            Esta acao nao pode ser desfeita.
                         </p>
-                        <button onClick={deleteAcc}  id='profile-delete-btn'>Delete</button>
+                        <button onClick={deleteAcc}  id='profile-delete-btn'>Excluir</button>
 
                     </div>
                 </div>

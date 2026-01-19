@@ -72,26 +72,26 @@ const Navbar = () => {
             <SideNav/>
             <div className='navbar'>
                 <h1 onClick={()=>window.location.replace('/')} className='navbar-logo'>
-                    Barber Shop
+                    Barbearia
                 </h1>
                 <ul className='navbar-ul'>
                     <li className='nav-items'>
-                        <a href="./#hero-navigate" className='links'>Home</a>
+                        <a href="./#hero-navigate" className='links'>Inicio</a>
                     </li>
                     <li className='nav-items'>
-                        <a href="./#what-we-do" className='links'>Service</a> 
+                        <a href="./#what-we-do" className='links'>Servicos</a> 
                     </li>
                     <li className='nav-items'>
-                        <a href="./#hours-navigate" className='links'> Hours</a>
+                        <a href="./#hours-navigate" className='links'>Horarios</a>
                     </li>
                     <li className='nav-items'>
                         <Link className='links cp' to='/admin'>
-                            Control Panel
+                            Painel de Controle
                         </Link>
                     </li>
                     <li className='nav-items'>
                         <Link className='links up' to='/profile'>
-                            User Profile
+                            Perfil do Usuario
                         </Link>
                     </li>
                 </ul>
@@ -109,18 +109,18 @@ const Navbar = () => {
 
                 <div className='login-reg-links'>
                     <Link className='links login-link disappear' to='/login'>
-                        Login
+                        Entrar
                     </Link>
                 
                     <span className='log-reg-separator disappear'> / </span>
                     <Link className='links disappear' to='/register'>
-                        Register
+                        Registrar
                     </Link>
                 </div>
 
                 <div className='user-loggedIn'>
                     <p className='disappear'>Hello, {name} !</p>
-                    <button className='disappear' onClick={logout}>Logout</button>
+                    <button className='disappear' onClick={logout}>Sair</button>
                 </div>
 
             

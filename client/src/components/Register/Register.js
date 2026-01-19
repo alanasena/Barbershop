@@ -58,7 +58,7 @@ const Register = (props) => {
             <div className='register-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <h1>Register</h1>
+                        <h1>Registrar</h1>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
@@ -72,27 +72,27 @@ const Register = (props) => {
                             name='email'    
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Senha:</p>
                         <input type="password"
-                            placeholder='Password...'
+                            placeholder='Senha...'
                             className='form-container-input'
                             name='password'
                             onChange={(e) => setPass(e.target.value)}
                         />
-                        <p>Confirm Password:</p>
+                        <p>Confirmar Senha:</p>
                         <input type="password"
-                            placeholder='Password...'
+                            placeholder='Confirmar senha...'
                             className='form-container-input'
                             name='confirmPassword'
                             onChange={(e) => setConfirmPass(e.target.value)}
                             onKeyPress={(e) => registerByPress(e)}
                         /> 
                         <div className='reg-btn-div'>
-                            <button onClick={handleRegister} className='reg-submit'>Register</button>
+                            <button onClick={handleRegister} className='reg-submit'>Registrar</button>
                         </div>
                         <div className='new-account-login'>
                             <Link to='/login' className='new-account-link'>
-                                Have account? <br/>Login Now!
+                                Ja tem conta? <br/>Entre agora!
                             </Link> 
                         </div> 
                         <div className='login-div'>
