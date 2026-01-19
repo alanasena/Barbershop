@@ -6,6 +6,49 @@
     margin-bottom: 10px;
 }
 
+.feedbacks-create {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 20px;
+}
+
+.feedbacks-create h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.feedbacks-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.feedbacks-form input,
+.feedbacks-form select,
+.feedbacks-form textarea {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.feedbacks-form button {
+    padding: 10px;
+    background-color: #4fbae4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.feedbacks-form button:disabled {
+    background-color: #9ccfe3;
+    cursor: not-allowed;
+}
+
 .feedbacks-loading,
 .feedbacks-empty,
 .feedbacks-error {

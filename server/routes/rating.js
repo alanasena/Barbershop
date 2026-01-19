@@ -30,7 +30,8 @@ router.post('/rating', async (req, res) => {
             appointmentId,
             userId,
             rating,
-            comment: comment || ''
+            comment: comment || '',
+            isManual: false
         })
 
         await newRating.save()
@@ -39,6 +40,31 @@ router.post('/rating', async (req, res) => {
     } catch (error) {
         console.error('Erro ao criar avaliacao:', error)
         res.status(500).send({ error: 'Erro ao criar avaliacao' })
+    }
+})
+
+router.post('/rating/manual', async (req, res) => {
+    try {
+        const { rating, comment, clientName, clientEmail } = req.body
+
+        if (!rating) {
+            return res.status(400).send({ error: 'Nota e obrigatoria' })
+        }
+
+        const manualRating = new Rating({
+            rating,
+            comment: comment || '',
+            isManual: true,
+            clientName: clientName || 'Cliente',
+            clientEmail: clientEmail || ''
+        })
+
+        await manualRating.save()
+
+        res.status(201).send(manualRating)
+    } catch (error) {
+        console.error('Erro ao criar avaliacao manual:', error)
+        res.status(500).send({ error: 'Erro ao criar avaliacao manual' })
     }
 })
 
@@ -58,6 +84,9 @@ router.get('/ratings', async (req, res) => {
             rating: item.rating,
             comment: item.comment,
             createdAt: item.createdAt,
+            isManual: item.isManual,
+            clientName: item.clientName || null,
+            clientEmail: item.clientEmail || null,
             user: item.userId ? {
                 _id: item.userId._id,
                 name: item.userId.name,
