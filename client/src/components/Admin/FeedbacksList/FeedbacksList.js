@@ -40,13 +40,15 @@ const FeedbacksList = () => {
         const fetchBarbers = async () => {
             try {
                 const response = await axios.get(`${API_URL}/barbers`)
-                const list = response.data || []
+                const payload = response.data && response.data.value ? response.data.value : response.data
+                const list = Array.isArray(payload) ? payload : []
                 setBarbers(list)
                 if (list.length && !newBarberName) {
                     setNewBarberName(list[0].name)
                 }
             } catch (err) {
                 console.error('Erro ao buscar barbeiros:', err)
+                setError('Erro ao carregar barbeiros')
                 setBarbers([])
             }
         }
