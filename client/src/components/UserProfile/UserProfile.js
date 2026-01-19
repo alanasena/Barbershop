@@ -5,6 +5,7 @@ import profileImg  from '../../assets/profile-img.jpg'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
 import {getCookie, setCookie, setCookieInMins, deleteCookie} from '../../cookies'
+import API_URL from '../../config/api'
 
 
 const UserProfile = (props) => {
@@ -31,7 +32,7 @@ const UserProfile = (props) => {
 
 
     const getProfile = (userID) =>{
-        axios.get(`https://barber-appointments.herokuapp.com/profiledata?id=${userID}`).then((response) =>{
+        axios.get(`${API_URL}/profiledata?id=${userID}`).then((response) =>{
 
             let {error, email, name, phone } = response.data 
             if(error){
@@ -46,7 +47,7 @@ const UserProfile = (props) => {
             }
         })
 
-        axios.get(`https://barber-appointments.herokuapp.com/userappointment?id=${userID}`).then((response) =>{
+        axios.get(`${API_URL}/userappointment?id=${userID}`).then((response) =>{
             console.log(response.data)
 
             let {error, day, time, date } = response.data 
@@ -74,7 +75,7 @@ const UserProfile = (props) => {
             obj.phone = updatedPhone
             obj.userID = getCookie('id')
     
-            axios.post('https://barber-appointments.herokuapp.com/updateprofile', obj).then((response) =>{
+            axios.post(`${API_URL}/updateprofile`, obj).then((response) =>{
                 let {error} = response.data
 
                 if(error){
@@ -114,7 +115,7 @@ const UserProfile = (props) => {
 
     const cancelAppointment = async() => {
 
-        let response = await axios.post('https://barber-appointments.herokuapp.com/cancelappointment', {id:getCookie('id')})
+        let response = await axios.post(`${API_URL}/cancelappointment`, {id:getCookie('id')})
         console.log(response.data)
         let {error} = response.data
         if(error){
@@ -128,7 +129,7 @@ const UserProfile = (props) => {
 
     const deleteAcc = async() =>{
         console.log('id cookie ',getCookie('id'))
-        let response = await axios.post('https://barber-appointments.herokuapp.com/deleteacc', {id:getCookie('id')})
+        let response = await axios.post(`${API_URL}/deleteacc`, {id:getCookie('id')})
         let {error} = response.data
         if(error){
             alert(error)

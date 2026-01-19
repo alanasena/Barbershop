@@ -6,6 +6,7 @@ import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
+import API_URL from '../../config/api'
 
 
 
@@ -29,7 +30,7 @@ const Register = (props) => {
         userData.confirmPass = confirmPass
        
         
-        let response =  await axios.post('https://barber-appointments.herokuapp.com/register', userData)
+        let response =  await axios.post(`${API_URL}/register`, userData)
         let {error} = response.data
         if(error){
             loading.style.display = 'none'

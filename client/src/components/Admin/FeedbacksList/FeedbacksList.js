@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './FeedbacksList.css'
 import axios from 'axios'
+import API_URL from '../../../config/api'
 
 const FeedbacksList = () => {
     const [feedbacks, setFeedbacks] = useState([])
@@ -11,7 +12,7 @@ const FeedbacksList = () => {
         const fetchFeedbacks = async () => {
             setLoading(true)
             try {
-                const response = await axios.get('https://barber-appointments.herokuapp.com/ratings')
+                const response = await axios.get(`${API_URL}/ratings`)
                 const { error: apiError } = response.data || {}
                 if (apiError) {
                     setError(apiError)

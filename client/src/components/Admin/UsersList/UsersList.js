@@ -2,13 +2,14 @@ import React, {useEffect, useState} from 'react'
 import './UsersList.css'
 import axios from 'axios'
 import UserRow from './UserRow/UserRow'
+import API_URL from '../../../config/api'
 
 const UserList = () => {
     const [users, setUsers] = useState([])
 
     useEffect(()=>{
         console.log('user list rendred')
-        axios.get('https://barber-appointments.herokuapp.com/getusers').then((response) => {
+        axios.get(`${API_URL}/getusers`).then((response) => {
 
         
             let {error} = response.data
@@ -26,7 +27,7 @@ const UserList = () => {
 
         console.log('deleting user: ', id)
 
-        let response = await axios.post('https://barber-appointments.herokuapp.com/deleteacc', {id:id})
+        let response = await axios.post(`${API_URL}/deleteacc`, {id:id})
         let {error} = response.data
         if(error){
             alert(error)

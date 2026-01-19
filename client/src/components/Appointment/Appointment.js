@@ -8,6 +8,7 @@ import {getCookie, checkCookie} from '../../cookies'
 import {fullTime} from '../../time'
 import axios from 'axios'
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
+import API_URL from '../../config/api'
 
 const Appointment = (props) => {
     const [startDate, setStartDate] = useState(new Date())
@@ -73,7 +74,7 @@ const Appointment = (props) => {
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
 
-        let response = await axios.post('https://barber-appointments.herokuapp.com/changeappointment', appointmentData)
+        let response = await axios.post(`${API_URL}/changeappointment`, appointmentData)
         let { error } = response.data
         if(error){
             console.log(error)
@@ -100,7 +101,7 @@ const Appointment = (props) => {
         appointmentData.day = obj.day
         appointmentData.timeInMS = time
        
-        let response = await axios.post('https://barber-appointments.herokuapp.com/appointment', appointmentData)
+        let response = await axios.post(`${API_URL}/appointment`, appointmentData)
         let { error } = response.data
         if(error){
             setError(error)

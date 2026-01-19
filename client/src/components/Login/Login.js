@@ -7,6 +7,7 @@ import axios from 'axios'
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
+import API_URL from '../../config/api'
 
 
 const Login = (props) => {
@@ -28,7 +29,7 @@ const Login = (props) => {
         userData.email = email
         userData.pass = pass
 
-        let response = await axios.post('https://barber-appointments.herokuapp.com/login', userData)
+        let response = await axios.post(`${API_URL}/login`, userData)
         let {id, status, error, name, admin, phone} = response.data
         if(error){
             loading.style.display = 'none'

@@ -4,6 +4,7 @@ import Row from './Row/Row'
 import axios from 'axios'
 import {getSundays, makeDate} from '../../../time'
 import {Link} from 'react-router-dom'
+import API_URL from '../../../config/api'
 
 const AppointmentsList = () => {
     const [thisSunday, setThisSunday] = useState('this')
@@ -17,7 +18,7 @@ const AppointmentsList = () => {
         setThisSunday(makeDate(sundays.sunday))
         setLastSunday(makeDate(sundays.nextSunday))
 
-        axios.get('https://barber-appointments.herokuapp.com/getappointments').then((response)=>{
+        axios.get(`${API_URL}/getappointments`).then((response)=>{
             console.log(response.data)
 
             let {error} = response.data
