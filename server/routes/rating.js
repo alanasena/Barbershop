@@ -50,6 +50,9 @@ router.post('/rating/manual', async (req, res) => {
         if (!rating) {
             return res.status(400).send({ error: 'Nota e obrigatoria' })
         }
+        if (!barberName) {
+            return res.status(400).send({ error: 'Nome do barbeiro e obrigatorio' })
+        }
 
         const manualRating = new Rating({
             rating,
@@ -57,7 +60,7 @@ router.post('/rating/manual', async (req, res) => {
             isManual: true,
             clientName: clientName || 'Cliente',
             clientEmail: clientEmail || '',
-            barberName: barberName || 'Barbeiro'
+            barberName
         })
 
         await manualRating.save()

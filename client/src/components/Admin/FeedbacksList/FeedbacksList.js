@@ -117,7 +117,7 @@ const FeedbacksList = () => {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder='Opcional'
                     />
-                    <button onClick={handleCreateManual} disabled={creating}>
+                    <button onClick={handleCreateManual} disabled={creating || !newBarberName.trim()}>
                         {creating ? 'Salvando...' : 'Adicionar feedback'}
                     </button>
                 </div>
@@ -147,7 +147,7 @@ const FeedbacksList = () => {
                                 <tr key={item._id}>
                                     <td>{item.user?.name || item.clientName || item.appointment?.name || 'N/A'}</td>
                                     <td>{item.user?.email || item.clientEmail || 'N/A'}</td>
-                                    <td>{item.barberName || 'N/A'}</td>
+                                    <td>{item.barberName || 'Nao informado'}</td>
                                     <td>{item.appointment?.date || (item.isManual ? 'Manual' : 'N/A')}</td>
                                     <td>{item.appointment?.time || (item.isManual ? 'Manual' : 'N/A')}</td>
                                     <td>{item.rating ?? 'N/A'}</td>
