@@ -5,6 +5,7 @@ import API_URL from '../../../config/api'
 
 const FeedbacksList = () => {
     const [feedbacks, setFeedbacks] = useState([])
+    const [barbers, setBarbers] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
     const [newRating, setNewRating] = useState('5')
@@ -36,7 +37,22 @@ const FeedbacksList = () => {
             }
         }
 
+        const fetchBarbers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/barbers`)
+                const list = response.data || []
+                setBarbers(list)
+                if (list.length && !newBarberName) {
+                    setNewBarberName(list[0].name)
+                }
+            } catch (err) {
+                console.error('Erro ao buscar barbeiros:', err)
+                setBarbers([])
+            }
+        }
+
         fetchFeedbacks()
+        fetchBarbers()
     }, [])
 
     const handleCreateManual = async () => {
@@ -96,12 +112,21 @@ const FeedbacksList = () => {
                         placeholder='Ex: joao@email.com'
                     />
                     <label>Nome do barbeiro</label>
-                    <input
-                        type='text'
+                    <select
                         value={newBarberName}
                         onChange={(e) => setNewBarberName(e.target.value)}
-                        placeholder='Ex: Carlos'
-                    />
+                        disabled={!barbers.length}
+                    >
+                        {barbers.length === 0 ? (
+                            <option value=''>Sem barbeiros cadastrados</option>
+                        ) : (
+                            barbers.map((barber) => (
+                                <option key={barber.id} value={barber.name}>
+                                    {barber.name} ({barber.email})
+                                </option>
+                            ))
+                        )}
+                    </select>
                     <label>Nota (1 a 5)</label>
                     <select value={newRating} onChange={(e) => setNewRating(e.target.value)}>
                         <option value='1'>1</option>

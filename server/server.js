@@ -5,6 +5,7 @@ const authRoute = require('./routes/auth');
 const appointmentRoute = require('./routes/appointment');
 const profileRoute = require('./routes/profile');
 const ratingRoute = require('./routes/rating');
+const barberRoute = require('./routes/barber');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -24,6 +25,7 @@ app.use('/', authRoute);
 app.use('/', appointmentRoute);
 app.use('/', profileRoute);
 app.use('/', ratingRoute);
+app.use('/', barberRoute);
 
 app.listen( PORT || 5000, () =>
   console.log(`Server has started on port:${PORT}`)
