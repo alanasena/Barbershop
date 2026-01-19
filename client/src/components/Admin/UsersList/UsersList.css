@@ -1,6 +1,10 @@
 
 
 
+.user-list{
+    color: #2b2b2b;
+}
+
 .user-list table{
 
     width: 100%;
@@ -15,6 +19,7 @@
 .table-row td{
     padding: 5px 10px;
     height: 45px;    
+    color: #2b2b2b;
 }
 
 

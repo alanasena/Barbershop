@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './FeedbacksList.css'
 import axios from 'axios'
+import { getCookie } from '../../../cookies'
 import API_URL from '../../../config/api'
 
 const FeedbacksList = () => {
@@ -15,6 +16,7 @@ const FeedbacksList = () => {
     const [newBarberName, setNewBarberName] = useState('')
     const [newBarberEmail, setNewBarberEmail] = useState('')
     const [creating, setCreating] = useState(false)
+    const isBarber = getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com')
 
     useEffect(() => {
         const fetchFeedbacks = async () => {
@@ -100,64 +102,66 @@ const FeedbacksList = () => {
             <h1>Feedbacks</h1>
             {error ? <p className='feedbacks-error'>{error}</p> : null}
 
-            <div className='feedbacks-create'>
-                <h2>Criar feedback manual</h2>
-                <div className='feedbacks-form'>
-                    <label>Nome do cliente</label>
-                    <input
-                        type='text'
-                        value={newClientName}
-                        onChange={(e) => setNewClientName(e.target.value)}
-                        placeholder='Ex: Joao Silva'
-                    />
-                    <label>Email do cliente</label>
-                    <input
-                        type='email'
-                        value={newClientEmail}
-                        onChange={(e) => setNewClientEmail(e.target.value)}
-                        placeholder='Ex: joao@email.com'
-                    />
-                    <label>Nome do barbeiro</label>
-                    <select
-                        value={newBarberEmail}
-                        onChange={(e) => {
-                            const value = e.target.value
-                            const barber = barbers.find((item) => item.email === value)
-                            setNewBarberEmail(value)
-                            setNewBarberName(barber ? barber.name : '')
-                        }}
-                        disabled={!barbers.length}
-                    >
-                        {barbers.length === 0 ? (
-                            <option value=''>Sem barbeiros cadastrados</option>
-                        ) : (
-                            barbers.map((barber) => (
-                                <option key={barber.id} value={barber.email}>
-                                    {barber.name} ({barber.email})
-                                </option>
-                            ))
-                        )}
-                    </select>
-                    <label>Nota (1 a 5)</label>
-                    <select value={newRating} onChange={(e) => setNewRating(e.target.value)}>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                        <option value='3'>3</option>
-                        <option value='4'>4</option>
-                        <option value='5'>5</option>
-                    </select>
-                    <label>Comentario</label>
-                    <textarea
-                        rows='3'
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder='Opcional'
-                    />
-                    <button onClick={handleCreateManual} disabled={creating || !newBarberName.trim()}>
-                        {creating ? 'Salvando...' : 'Adicionar feedback'}
-                    </button>
+            {!isBarber && (
+                <div className='feedbacks-create'>
+                    <h2>Criar feedback manual</h2>
+                    <div className='feedbacks-form'>
+                        <label>Nome do cliente</label>
+                        <input
+                            type='text'
+                            value={newClientName}
+                            onChange={(e) => setNewClientName(e.target.value)}
+                            placeholder='Ex: Joao Silva'
+                        />
+                        <label>Email do cliente</label>
+                        <input
+                            type='email'
+                            value={newClientEmail}
+                            onChange={(e) => setNewClientEmail(e.target.value)}
+                            placeholder='Ex: joao@email.com'
+                        />
+                        <label>Nome do barbeiro</label>
+                        <select
+                            value={newBarberEmail}
+                            onChange={(e) => {
+                                const value = e.target.value
+                                const barber = barbers.find((item) => item.email === value)
+                                setNewBarberEmail(value)
+                                setNewBarberName(barber ? barber.name : '')
+                            }}
+                            disabled={!barbers.length}
+                        >
+                            {barbers.length === 0 ? (
+                                <option value=''>Sem barbeiros cadastrados</option>
+                            ) : (
+                                barbers.map((barber) => (
+                                    <option key={barber.id} value={barber.email}>
+                                        {barber.name} ({barber.email})
+                                    </option>
+                                ))
+                            )}
+                        </select>
+                        <label>Nota (1 a 5)</label>
+                        <select value={newRating} onChange={(e) => setNewRating(e.target.value)}>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                        </select>
+                        <label>Comentario</label>
+                        <textarea
+                            rows='3'
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder='Opcional'
+                        />
+                        <button onClick={handleCreateManual} disabled={creating || !newBarberName.trim()}>
+                            {creating ? 'Salvando...' : 'Adicionar feedback'}
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {loading ? (
                 <p className='feedbacks-loading'>Carregando...</p>
@@ -179,7 +183,18 @@ const FeedbacksList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {feedbacks.map((item) => (
+                            {(isBarber
+                                ? feedbacks.filter((item) => {
+                                    const barberName = (getCookie('barberName') || '').toLowerCase()
+                                    const barberEmail = (getCookie('barberEmail') || getCookie('email') || '').toLowerCase()
+                                    const itemName = (item.barberName || '').toLowerCase()
+                                    const itemEmail = (item.barberEmail || '').toLowerCase()
+                                    if (barberEmail && itemEmail && itemEmail === barberEmail) return true
+                                    if (barberName && itemName && (barberName.includes(itemName) || itemName.includes(barberName))) return true
+                                    return false
+                                })
+                                : feedbacks
+                            ).map((item) => (
                                 <tr key={item._id}>
                                     <td>{item.user?.name || item.clientName || item.appointment?.name || 'N/A'}</td>
                                     <td>{item.user?.email || item.clientEmail || 'N/A'}</td>

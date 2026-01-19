@@ -159,20 +159,20 @@ const UserProfile = (props) => {
                         <li className='profile-make-appointment'>
                             <i className="fa fa-plus" aria-hidden="true"></i>
                             <Link className='link-make-appo' to='/appointment'>
-                                MAKE APPOINTMENT
+                                Agendar Horario
                             </Link>
                         </li>
                         <li>
                             <i className="fa fa-user" aria-hidden="true"></i>
-                            <a href='#user-profile-info'>PERSONAL INFO</a>
+                            <a href='#user-profile-info'>Informacoes Pessoais</a>
                         </li>
                         <li>
                             <i className="fa fa-pencil mr-right-i" aria-hidden="true"></i>
-                            <a href='#user-profile-updateinfo'>UPDATE INFO</a>
+                            <a href='#user-profile-updateinfo'>Atualizar Informacoes</a>
                         </li>
                         <li>
                             <i className="fa fa-trash" aria-hidden="true"></i>
-                            <a href='#user-profile-delete-acc'>DELETE ACCOUNT</a>
+                            <a href='#user-profile-delete-acc'>Excluir Conta</a>
                         </li>
                     </ul>
 

@@ -3,13 +3,13 @@
 
 
 .user-profile-container{
-    background-color: rgb(241, 241, 241);
+    background-color: #f3f5f7;
     padding-top: 59px;
     display: flex;
 }
 
 .user-profile-left{
-    background-color: rgb(2,44,82);
+    background-color: #0b3d6b;
     width: 15vw;
 
     color: white;
@@ -47,7 +47,7 @@
 }
 
 .user-profile-left ul li a{
-    color: white;
+    color: #ffffff;
     text-decoration: none;
     font-size: 18px;
 }
@@ -58,7 +58,7 @@
 }
 
 .profile-make-appointment{
-    border: 1px solid white;
+    border: 1px solid #e6e6e6;
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -68,7 +68,7 @@
 }
 
 .link-make-appo{
-    color: black !important;
+    color: #1f2d3d !important;
 }
 
 
@@ -82,6 +82,7 @@
     width: 85vw;
 
     overflow-y: auto;
+    color: #1f2d3d;
 }
 
 #user-profile-info{
@@ -91,7 +92,7 @@
 .user-profile-box{
     width: 90%;
     margin-bottom: 50px;
-    background-color: white;
+    background-color: #ffffff;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
     border-radius: 10px;
     padding:25px;
@@ -107,7 +108,7 @@
 
 .user-profile-info-div p{
     margin: 10px 0px;
-    font-weight: bold;
+    font-weight: 600;
     margin-right: 5px;
 
 }
@@ -119,7 +120,7 @@
 
 .user-profile-appointment{
     margin-top: 20px;
-    color: white;
+    color: #ffffff;
     max-width: 500px;
 }
 
@@ -134,7 +135,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgb(45, 207, 67);
+    background-color: #2fbf5c;
 
     margin-left: auto;
     padding: 5px 10px;
@@ -146,7 +147,7 @@
 
 .user-profile-appointment-btns{
     padding: 10px;
-    background-color: rgb(18, 74, 126);
+    background-color: #145a96;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     width: 100%;
@@ -173,12 +174,12 @@
 }
 
 .profile-btn-color-red{
-    background-color: rgb(236, 49, 49);
+    background-color: #d9534f;
     color: white;
 }
 
 .profile-btn-color-red:hover{
-    background-color: rgb(236, 97, 97);
+    background-color: #e56a67;
 }
 
 
@@ -193,7 +194,8 @@
     width: 250px;
     border-radius: 5px;
     border: none;
-    background-color: rgb(226, 224, 224);
+    background-color: #e9ecef;
+    border: 1px solid #b8c1cc;
     font-weight: bold;
     margin-bottom: 15px;
     padding-left: 10px;
@@ -208,7 +210,7 @@
     transition: 0.3s all ease-in-out;
     cursor: pointer;
     margin-top: 10px;
-    background-color: rgb(72, 143, 209);
+    background-color: #3a7bd5;
     color: white;
 
 }
@@ -226,7 +228,7 @@
     transition: 0.3s all ease-in-out;
     cursor: pointer;
     margin-top: 15px;
-    background-color: rgb(223, 83, 83);
+    background-color: #d9534f;
     color: white;
 }
 

@@ -99,6 +99,16 @@ const SideNav = () => {
                             Painel de Controle
                         </Link>
                     </li>
+                    <li id='my-appointments' className='nav-items'>
+                        <Link className='links side-cp' to='/admin'>
+                            Meus Agendamentos
+                        </Link>
+                    </li>
+                    <li id='my-feedbacks' className='nav-items'>
+                        <Link className='links side-cp' to='/admin'>
+                            Meus Feedbacks
+                        </Link>
+                    </li>
                     <li id='user-profile' className='nav-items'>
                         <Link className='links side-up' to='/profile'>
                             Perfil do Usuario

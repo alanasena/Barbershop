@@ -17,6 +17,17 @@ funcionamento atual.
 - Feedbacks (avaliacoes) reintroduzidos:
   - Criado modelo e rotas para registrar e listar avaliacoes.
   - Adicionada tela de visualizacao no painel de controle (admin).
+  - Admin pode criar feedback manual; barbeiro apenas visualiza.
+  - Feedbacks agora incluem nome/email do barbeiro.
+
+- Barbeiros no painel:
+  - Barbeiro tem acesso ao Painel de Controle.
+  - Agenda do barbeiro filtra apenas seus agendamentos.
+  - Feedbacks do barbeiro mostram somente os dele.
+
+- Agendamentos com barbeiro:
+  - Cliente seleciona barbeiro ao marcar horario.
+  - Agendamento salva nome/email do barbeiro.
 
 Onde foram feitas as modificacoes (arquivos):
 - `.gitignore` (novo): regras para ignorar arquivos locais/temporarios.
@@ -26,9 +37,16 @@ Onde foram feitas as modificacoes (arquivos):
 - `server/server.js`: ajustes de formatacao (sem mudanca de logica).
 - `server/models/Rating.js`: modelo de avaliacao (feedback).
 - `server/routes/rating.js`: rotas para criar e listar feedbacks.
+- `server/routes/barber.js`: lista barbeiros para selecao no frontend.
+- `server/models/Appointment.js`: campos `barberName` e `barberEmail`.
+- `server/routes/appointment.js`: salva barbeiro no agendamento.
 - `client/src/components/Admin/FeedbacksList/`:
   - `FeedbacksList.js` e `FeedbacksList.css` (tela de feedbacks).
 - `client/src/components/Tabs/Tabs.js`: nova aba "Feedbacks" no painel.
+- `client/src/components/Appointment/Appointment.js`: selecao de barbeiro.
+- `client/src/components/Admin/AppointmentsList/AppointmentsList.js`: filtro por barbeiro.
+- `client/src/components/Login/Login.js`: identifica barbeiro por email.
+- `client/src/admin.route.js`: barbeiro acessa painel.
 
 2) MODIFICACOES FEITAS E POSTERIORMENTE REVERTIDAS
 
@@ -73,10 +91,11 @@ Configuracao:
 4) COMO VER O FEEDBACK (AVALIACOES)
 
 Como acessar na interface:
-1. Fazer login como admin.
+1. Fazer login como admin ou barbeiro.
 2. Acessar o Painel de Controle.
 3. Abrir a aba "Feedbacks" para ver a lista de avaliacoes.
 
 Rotas e dados:
 - Listagem: `GET /ratings` (retorna usuario, agendamento, nota e comentario).
 - Criacao: `POST /rating` com `appointmentId`, `userId`, `rating`, `comment`.
+- Criacao manual (admin): `POST /rating/manual` com `rating`, `comment`, `clientName`, `clientEmail`, `barberName`, `barberEmail`.

@@ -13,6 +13,7 @@ import Box from '@material-ui/core/Box';
 import UserList from '../Admin/UsersList/UsersList'
 import AppointmentsList from '../Admin/AppointmentsList/AppointmentsList'
 import FeedbacksList from '../Admin/FeedbacksList/FeedbacksList'
+import { getCookie } from '../../cookies'
 import './Tabs.css'
 
 function TabPanel(props) {
@@ -28,7 +29,9 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component="div" className="tabs-panel-content">
+            {children}
+          </Typography>
         </Box>
       )}
     </div>
@@ -64,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ScrollableTabsButtonPrevent() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const isBarber = getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com')
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -82,17 +86,19 @@ export default function ScrollableTabsButtonPrevent() {
           className='tabs'
         >
           <Tab icon={<PhoneIcon />} aria-label="phone" {...a11yProps(0)} />
-          <Tab icon={<PersonPinIcon />} aria-label="favorite" {...a11yProps(1)} />
-          <Tab icon={<StarIcon />} aria-label="feedbacks" {...a11yProps(2)} />
+          {!isBarber && <Tab icon={<PersonPinIcon />} aria-label="favorite" {...a11yProps(1)} />}
+          <Tab icon={<StarIcon />} aria-label="feedbacks" {...a11yProps(isBarber ? 1 : 2)} />
         </Tabs>
       </AppBar>
       <TabPanel  value={value} index={0}>
        <AppointmentsList/>
       </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={1}>
-        <UserList/>
-      </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={2}>
+      {!isBarber && (
+        <TabPanel className='tab-panel' value={value} index={1}>
+          <UserList/>
+        </TabPanel>
+      )}
+      <TabPanel className='tab-panel' value={value} index={isBarber ? 1 : 2}>
         <FeedbacksList/>
       </TabPanel>
     </div>
