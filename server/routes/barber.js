@@ -5,12 +5,15 @@ const Users = require('../models/User')
 // Neste projeto, consideramos barbeiros como usuarios com email @barbearia.com
 router.get('/barbers', async (req, res) => {
     try {
-        const barbers = await Users.find({ email: /@barbearia\.com$/i })
+        let barbers = await Users.find({ email: /@barbearia\.com$/i })
             .select('name email')
             .sort({ name: 1 })
 
+        // Se nao houver barbeiros com email @barbearia.com, retorna todos os usuarios
         if (!barbers.length) {
-            return res.send([])
+            barbers = await Users.find()
+                .select('name email')
+                .sort({ name: 1 })
         }
 
         const response = barbers.map((barber) => ({
