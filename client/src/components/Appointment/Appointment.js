@@ -84,6 +84,17 @@ const Appointment = (props) => {
 
     const changeAppointment = async() =>{
 
+        if (!userDate || !userTime || !time) {
+            setError('Selecione data e horario')
+            setTimeout(() => setError(''), 6000)
+            return
+        }
+        if (!selectedBarberName || !selectedBarberEmail) {
+            setError('Selecione um barbeiro')
+            setTimeout(() => setError(''), 6000)
+            return
+        }
+
         let appointmentData = {}
         const obj = fullTime(dayOfWeek)
         appointmentData.userID = getCookie('id')
@@ -112,6 +123,17 @@ const Appointment = (props) => {
     }
 
     const makeAppointment = async() =>{
+        if (!userDate || !userTime || !time) {
+            setError('Selecione data e horario')
+            setTimeout(() => setError(''), 6000)
+            return
+        }
+        if (!selectedBarberName || !selectedBarberEmail) {
+            setError('Selecione um barbeiro')
+            setTimeout(() => setError(''), 6000)
+            return
+        }
+
         let appointmentData = {}
         const obj = fullTime(dayOfWeek)
         appointmentData.userID = getCookie('id')

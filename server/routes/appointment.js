@@ -18,6 +18,13 @@ router.post('/appointment', async (req, res)=>{
 
   let {userID, key, name, date, time, phone, day, timeInMS, barberName, barberEmail} = req.body
 
+    if (!date || !time || !day || !timeInMS) {
+      return res.send({ error: 'Data e horario sao obrigatorios' })
+    }
+    if (!barberName || !barberEmail) {
+      return res.send({ error: 'Selecione um barbeiro' })
+    }
+
     const newAppointment = new NewAppointment({   
         userID,
         appointmentKey:key,
@@ -45,6 +52,13 @@ router.post('/changeappointment', async (req, res)=>{
   if(!appointmentExists[0]) return res.send({error:'Appointment not found'})
 
   let {key, date, time, day, timeInMS, barberName, barberEmail} = req.body
+
+  if (!date || !time || !day || !timeInMS) {
+    return res.send({ error: 'Data e horario sao obrigatorios' })
+  }
+  if (!barberName || !barberEmail) {
+    return res.send({ error: 'Selecione um barbeiro' })
+  }
 
   appointmentExists[0].appointmentKey = key
   appointmentExists[0].date = date
