@@ -292,7 +292,7 @@ const UserProfile = (props) => {
                                             onClick={confirmServiceCompleted}
                                             className='profile-btn-color-green profile-btn-full'
                                         >
-                                            Confirmar servico concluido
+                                            Confirmar
                                         </button>
                                     ) : null}
                                     {time !== 'Empty' && isCompletedByClient && !isRated ? (
