@@ -31,13 +31,15 @@ const AppointmentsList = () => {
                     if( obj.timeInMS > sundays.sunday && obj.timeInMS < sundays.nextSunday)return true
                     else return false  
                 })
-                const isBarber = getCookie('barber') === 'true'
+                const isBarber = getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com')
                 if (isBarber) {
-                    const barberEmail = getCookie('barberEmail')
-                    const barberName = getCookie('barberName')
+                    const barberEmail = (getCookie('barberEmail') || getCookie('email') || '').toLowerCase().trim()
+                    const barberName = (getCookie('barberName') || '').toLowerCase().trim()
                     newAppointments = newAppointments.filter((appointment) => {
-                        if (barberEmail && appointment.barberEmail === barberEmail) return true
-                        if (barberName && appointment.barberName === barberName) return true
+                        const appointmentEmail = (appointment.barberEmail || '').toLowerCase().trim()
+                        const appointmentName = (appointment.barberName || '').toLowerCase().trim()
+                        if (barberEmail && appointmentEmail && appointmentEmail === barberEmail) return true
+                        if (barberName && appointmentName && (barberName.includes(appointmentName) || appointmentName.includes(barberName))) return true
                         return false
                     })
                 }
