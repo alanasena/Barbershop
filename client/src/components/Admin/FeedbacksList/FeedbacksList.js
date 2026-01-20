@@ -16,7 +16,8 @@ const FeedbacksList = () => {
     const [newBarberName, setNewBarberName] = useState('')
     const [newBarberEmail, setNewBarberEmail] = useState('')
     const [creating, setCreating] = useState(false)
-    const isBarber = getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com')
+    const isAdmin = getCookie('admin') === 'true'
+    const isBarber = !isAdmin && (getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com'))
 
     useEffect(() => {
         const fetchFeedbacks = async () => {

@@ -67,7 +67,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ScrollableTabsButtonPrevent() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const isBarber = getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com')
+  const isAdmin = getCookie('admin') === 'true'
+  const isBarber = !isAdmin && (getCookie('barber') === 'true' || (getCookie('email') || '').includes('@barbearia.com'))
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
