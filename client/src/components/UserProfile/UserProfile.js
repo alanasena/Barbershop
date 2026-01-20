@@ -140,30 +140,55 @@ const UserProfile = (props) => {
         }
     }
 
+    const resolveAppointmentId = async () => {
+        if (appointmentId) return appointmentId
+        try {
+            const response = await axios.get(`${API_URL}/getappointments`)
+            const list = Array.isArray(response.data) ? response.data : []
+            const found = list.find((item) => item.userID === getCookie('id'))
+            if (found) {
+                setAppointmentId(found._id)
+                setBarberName(found.barberName || '')
+                setBarberEmail(found.barberEmail || '')
+                setDay(found.day || day)
+                setTime(found.time || time)
+                setDate(found.date || date)
+                return found._id
+            }
+        } catch (err) {
+            return ''
+        }
+        return ''
+    }
+
     const confirmServiceCompleted = async () => {
-        if (!appointmentId) {
-            setRatingError('Agendamento nao encontrado')
+        const id = await resolveAppointmentId()
+        if (!id) {
+            alert('Agendamento nao encontrado')
             return
         }
         try {
-            const response = await axios.post(`${API_URL}/appointment/complete`, { appointmentId })
+            const response = await axios.post(`${API_URL}/appointment/complete`, { appointmentId: id })
             if (response.data && response.data.error) {
-                setRatingError(response.data.error)
+                alert(response.data.error)
             } else {
                 setIsCompletedByClient(true)
                 setIsRated(false)
-                setRatingError('')
             }
         } catch (err) {
-            setRatingError('Erro ao confirmar servico')
+            alert('Erro ao confirmar servico')
         }
     }
 
     const submitRating = async () => {
-        if (!appointmentId) return
+        const id = await resolveAppointmentId()
+        if (!id) {
+            setRatingError('Agendamento nao encontrado para avaliar')
+            return
+        }
         try {
             const payload = {
-                appointmentId,
+                appointmentId: id,
                 userId: getCookie('id'),
                 rating: Number(ratingValue),
                 comment: ratingComment
@@ -261,7 +286,6 @@ const UserProfile = (props) => {
                                     <p>Voce tem agendamento para:</p>
                                     <button onClick={changeAppointment} id='profile-btn-change'>Alterar</button>
                                     <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancelar</button>
-                                    {ratingError ? <p className='profile-error'>{ratingError}</p> : null}
                                     {time !== 'Empty' && !isCompletedByClient ? (
                                         <button
                                             type='button'
@@ -273,6 +297,7 @@ const UserProfile = (props) => {
                                     ) : null}
                                     {time !== 'Empty' && isCompletedByClient && !isRated ? (
                                         <div className='profile-rating-box'>
+                                            {ratingError ? <p className='profile-error'>{ratingError}</p> : null}
                                             <p>Avaliar barbeiro: {barberName || barberEmail || 'Barbeiro'}</p>
                                             <select value={ratingValue} onChange={(e) => setRatingValue(e.target.value)}>
                                                 <option value='1'>1</option>
