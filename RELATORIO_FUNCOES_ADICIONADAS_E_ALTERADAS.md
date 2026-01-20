@@ -9,7 +9,8 @@ ou alteradas e o que elas fazem.
   - Lista barbeiros para o frontend.
   - Busca usuarios com email @barbearia.com e, se nao existir nenhum, retorna
     todos os usuarios.
-  - Arquivo: server/routes/barber.js
+  - Rota: GET /barbers
+  - Caminho do arquivo: server/routes/barber.js
   Codigo:
   ```js
   router.get('/barbers', async (req, res) => {
@@ -27,7 +28,8 @@ ou alteradas e o que elas fazem.
 
 - POST /appointment (alterada)
   - Cria agendamento e agora salva barberName e barberEmail junto ao registro.
-  - Arquivo: server/routes/appointment.js
+  - Rota: POST /appointment
+  - Caminho do arquivo: server/routes/appointment.js
   Codigo:
   ```js
   let { userID, key, name, date, time, phone, day, timeInMS, barberName, barberEmail } = req.body
@@ -48,7 +50,8 @@ ou alteradas e o que elas fazem.
 - POST /rating
   - Cria avaliacao vinculada a um agendamento.
   - Valida appointmentId, userId e rating, e impede duplicidade.
-  - Arquivo: server/routes/rating.js
+  - Rota: POST /rating
+  - Caminho do arquivo: server/routes/rating.js
   Codigo:
   ```js
   const { appointmentId, userId, rating, comment } = req.body
@@ -69,7 +72,8 @@ ou alteradas e o que elas fazem.
 - POST /rating/manual
   - Cria feedback manual sem necessidade de agendamento.
   - Usado pelo admin para registrar feedbacks diretamente.
-  - Arquivo: server/routes/rating.js
+  - Rota: POST /rating/manual
+  - Caminho do arquivo: server/routes/rating.js
   Codigo:
   ```js
   const { rating, comment, clientName, clientEmail, barberName, barberEmail } = req.body
@@ -88,7 +92,8 @@ ou alteradas e o que elas fazem.
 - GET /ratings
   - Lista feedbacks ordenados por data.
   - Retorna dados do usuario, agendamento e barbeiro.
-  - Arquivo: server/routes/rating.js
+  - Rota: GET /ratings
+  - Caminho do arquivo: server/routes/rating.js
   Codigo:
   ```js
   const ratings = await Rating.find()
@@ -108,7 +113,7 @@ ou alteradas e o que elas fazem.
 
 - Appointment (alterado)
   - Adicionados campos barberName e barberEmail no agendamento.
-  - Arquivo: server/models/Appointment.js
+  - Caminho do arquivo: server/models/Appointment.js
   Codigo:
   ```js
   barberName: {
@@ -125,7 +130,7 @@ ou alteradas e o que elas fazem.
 - Rating (adicionado/alterado)
   - Modelo de feedback com suporte a feedback manual.
   - Campos extras: isManual, clientName, clientEmail, barberName, barberEmail.
-  - Arquivo: server/models/Rating.js
+  - Caminho do arquivo: server/models/Rating.js
   Codigo:
   ```js
   isManual: {
@@ -154,7 +159,7 @@ ou alteradas e o que elas fazem.
 
 - AdminRoute (alterada)
   - Permite acesso ao painel para admin ou barbeiro.
-  - Arquivo: client/src/admin.route.js
+  - Caminho do arquivo: client/src/admin.route.js
   Codigo:
   ```js
   if (getCookie('admin') === 'true' || getCookie('barber') === 'true') {
@@ -166,7 +171,7 @@ ou alteradas e o que elas fazem.
 - Login (alterada)
   - Identifica barbeiro via email @barbearia.com.
   - Salva cookies de barbeiro (barberName e barberEmail).
-  - Arquivo: client/src/components/Login/Login.js
+  - Caminho do arquivo: client/src/components/Login/Login.js
   Codigo:
   ```js
   const isBarber = email.toLowerCase().includes('@barbearia.com')
@@ -183,7 +188,7 @@ ou alteradas e o que elas fazem.
 - Appointment (alterada)
   - Busca barbeiros via GET /barbers e permite selecionar no formulario.
   - Envia barberName e barberEmail ao criar ou alterar agendamento.
-  - Arquivo: client/src/components/Appointment/Appointment.js
+  - Caminho do arquivo: client/src/components/Appointment/Appointment.js
   Codigo:
   ```js
   const response = await axios.get(`${API_URL}/barbers`)
@@ -198,7 +203,7 @@ ou alteradas e o que elas fazem.
   - Lista feedbacks com dados de usuario/agendamento/barbeiro.
   - Admin pode criar feedback manual.
   - Barbeiro ve apenas feedbacks relacionados ao seu nome/email.
-  - Arquivo: client/src/components/Admin/FeedbacksList/FeedbacksList.js
+  - Caminho do arquivo: client/src/components/Admin/FeedbacksList/FeedbacksList.js
   Codigo:
   ```js
   const response = await axios.get(`${API_URL}/ratings`)
