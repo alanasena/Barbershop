@@ -191,6 +191,14 @@
     background-color: #2ab862;
 }
 
+.profile-btn-full{
+    width: auto;
+    min-width: 180px;
+    height: 32px;
+    padding: 0 12px;
+    margin-top: 8px;
+}
+
 .profile-rating-box{
     margin-top: 8px;
     display: flex;

@@ -141,13 +141,17 @@ const UserProfile = (props) => {
     }
 
     const confirmServiceCompleted = async () => {
-        if (!appointmentId) return
+        if (!appointmentId) {
+            setRatingError('Agendamento nao encontrado')
+            return
+        }
         try {
             const response = await axios.post(`${API_URL}/appointment/complete`, { appointmentId })
             if (response.data && response.data.error) {
                 setRatingError(response.data.error)
             } else {
                 setIsCompletedByClient(true)
+                setIsRated(false)
                 setRatingError('')
             }
         } catch (err) {
@@ -259,7 +263,11 @@ const UserProfile = (props) => {
                                     <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancelar</button>
                                     {ratingError ? <p className='profile-error'>{ratingError}</p> : null}
                                     {time !== 'Empty' && !isCompletedByClient ? (
-                                        <button onClick={confirmServiceCompleted} className='profile-btn-color-green'>
+                                        <button
+                                            type='button'
+                                            onClick={confirmServiceCompleted}
+                                            className='profile-btn-color-green profile-btn-full'
+                                        >
                                             Confirmar servico concluido
                                         </button>
                                     ) : null}
@@ -279,7 +287,7 @@ const UserProfile = (props) => {
                                                 onChange={(e) => setRatingComment(e.target.value)}
                                                 placeholder='Comentario (opcional)'
                                             />
-                                            <button onClick={submitRating} className='profile-btn-color-green'>
+                                            <button type='button' onClick={submitRating} className='profile-btn-color-green'>
                                                 Enviar avaliacao
                                             </button>
                                         </div>
