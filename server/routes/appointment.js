@@ -81,9 +81,14 @@ router.get('/userappointment', async(req, res) =>{
   console.log('user appointment')
 
   let obj = {}
+  obj.id = appointmentExists[0]._id
   obj.day = appointmentExists[0].day
   obj.time = appointmentExists[0].time
   obj.date = appointmentExists[0].date
+  obj.barberName = appointmentExists[0].barberName
+  obj.barberEmail = appointmentExists[0].barberEmail
+  obj.isCompletedByClient = appointmentExists[0].isCompletedByClient || false
+  obj.rated = appointmentExists[0].rated || false
   
   res.send(obj)
 
@@ -119,6 +124,28 @@ router.post('/cancelappointment', async(req, res) =>{
   res.send('canceling appointment...')
 
 
+})
+
+router.post('/appointment/complete', async (req, res) => {
+  try {
+    const { appointmentId } = req.body
+    if (!appointmentId) {
+      return res.status(400).send({ error: 'Agendamento nao informado' })
+    }
+
+    const appointment = await NewAppointment.findById(appointmentId)
+    if (!appointment) {
+      return res.status(404).send({ error: 'Agendamento nao encontrado' })
+    }
+
+    appointment.isCompletedByClient = true
+    await appointment.save()
+
+    res.send({ success: true })
+  } catch (e) {
+    console.log(e)
+    res.status(500).send({ error: 'Erro ao confirmar servico' })
+  }
 })
 
 router.get('/getusers', async(req, res) => {

@@ -21,6 +21,14 @@ const UserProfile = (props) => {
     const [time, setTime] = useState('Empty')
     const [date, setDate] = useState('')
     const [day, setDay] = useState('')
+    const [appointmentId, setAppointmentId] = useState('')
+    const [barberName, setBarberName] = useState('')
+    const [barberEmail, setBarberEmail] = useState('')
+    const [isCompletedByClient, setIsCompletedByClient] = useState(false)
+    const [isRated, setIsRated] = useState(false)
+    const [ratingValue, setRatingValue] = useState('5')
+    const [ratingComment, setRatingComment] = useState('')
+    const [ratingError, setRatingError] = useState('')
 
 
 
@@ -50,7 +58,7 @@ const UserProfile = (props) => {
         axios.get(`${API_URL}/userappointment?id=${userID}`).then((response) =>{
             console.log(response.data)
 
-            let {error, day, time, date } = response.data 
+            let {error, id, day, time, date, barberName, barberEmail, isCompletedByClient, rated } = response.data 
             if(error){
                 console.log(error)
             }
@@ -58,6 +66,11 @@ const UserProfile = (props) => {
                 setTime(time)
                 setDate(date)
                 setDay(day)
+                setAppointmentId(id || '')
+                setBarberName(barberName || '')
+                setBarberEmail(barberEmail || '')
+                setIsCompletedByClient(Boolean(isCompletedByClient))
+                setIsRated(Boolean(rated))
             }
         })
     }
@@ -124,6 +137,44 @@ const UserProfile = (props) => {
         else{
             alert('Agendamento cancelado')
             window.location.replace('/profile')
+        }
+    }
+
+    const confirmServiceCompleted = async () => {
+        if (!appointmentId) return
+        try {
+            const response = await axios.post(`${API_URL}/appointment/complete`, { appointmentId })
+            if (response.data && response.data.error) {
+                setRatingError(response.data.error)
+            } else {
+                setIsCompletedByClient(true)
+                setRatingError('')
+            }
+        } catch (err) {
+            setRatingError('Erro ao confirmar servico')
+        }
+    }
+
+    const submitRating = async () => {
+        if (!appointmentId) return
+        try {
+            const payload = {
+                appointmentId,
+                userId: getCookie('id'),
+                rating: Number(ratingValue),
+                comment: ratingComment
+            }
+            const response = await axios.post(`${API_URL}/rating`, payload)
+            if (response.data && response.data.error) {
+                setRatingError(response.data.error)
+            } else {
+                setIsRated(true)
+                setRatingComment('')
+                setRatingError('')
+                alert('Avaliacao enviada com sucesso!')
+            }
+        } catch (err) {
+            setRatingError('Erro ao enviar avaliacao')
         }
     }
 
@@ -206,6 +257,36 @@ const UserProfile = (props) => {
                                     <p>Voce tem agendamento para:</p>
                                     <button onClick={changeAppointment} id='profile-btn-change'>Alterar</button>
                                     <button onClick={cancelAppointment} className='profile-btn-color-red'>Cancelar</button>
+                                    {ratingError ? <p className='profile-error'>{ratingError}</p> : null}
+                                    {time !== 'Empty' && !isCompletedByClient ? (
+                                        <button onClick={confirmServiceCompleted} className='profile-btn-color-green'>
+                                            Confirmar servico concluido
+                                        </button>
+                                    ) : null}
+                                    {time !== 'Empty' && isCompletedByClient && !isRated ? (
+                                        <div className='profile-rating-box'>
+                                            <p>Avaliar barbeiro: {barberName || barberEmail || 'Barbeiro'}</p>
+                                            <select value={ratingValue} onChange={(e) => setRatingValue(e.target.value)}>
+                                                <option value='1'>1</option>
+                                                <option value='2'>2</option>
+                                                <option value='3'>3</option>
+                                                <option value='4'>4</option>
+                                                <option value='5'>5</option>
+                                            </select>
+                                            <textarea
+                                                rows='2'
+                                                value={ratingComment}
+                                                onChange={(e) => setRatingComment(e.target.value)}
+                                                placeholder='Comentario (opcional)'
+                                            />
+                                            <button onClick={submitRating} className='profile-btn-color-green'>
+                                                Enviar avaliacao
+                                            </button>
+                                        </div>
+                                    ) : null}
+                                    {time !== 'Empty' && isCompletedByClient && isRated ? (
+                                        <p className='profile-rating-done'>Avaliacao enviada.</p>
+                                    ) : null}
                                 </div>
                                 <div className='user-profile-appointment-time'>
                                     <p>{day}</p>

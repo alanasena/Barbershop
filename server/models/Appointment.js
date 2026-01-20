@@ -37,6 +37,14 @@ const newAppointment = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true
+    },
+    isCompletedByClient: {
+        type: Boolean,
+        default: false
+    },
+    rated: {
+        type: Boolean,
+        default: false
     }
  })
 

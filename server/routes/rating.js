@@ -36,6 +36,9 @@ router.post('/rating', async (req, res) => {
 
         await newRating.save()
 
+        appointment.rated = true
+        await appointment.save()
+
         res.status(201).send(newRating)
     } catch (error) {
         console.error('Erro ao criar avaliacao:', error)
